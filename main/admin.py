@@ -35,5 +35,11 @@ class CreditPaymentAdmin(admin.ModelAdmin):
 
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
-    list_display = ("title", "category", "amount", "paid_via", "date")
-    list_filter = ("category", "paid_via", "date")
+    list_display = (
+        "title",
+        "category",
+        "amount",
+        "paid_via",
+        "created_at",
+    )
+    list_filter = ("category", "paid_via", "created_at")
