@@ -1,86 +1,275 @@
-<div class="receipt-copy">
-  <div class="copy-badge">CUSTOMER COPY</div>
+<style>
+  .receipt-page {
+    background: #eef1f5;
+    padding: 20px 12px;
+    font-family: "Courier New", Courier, monospace;
+    color: #111827;
+  }
+  .receipt-actions {
+    max-width: 420px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .receipt-card {
+    max-width: 420px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 22px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  .copy-badge-wrap {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .copy-badge {
+    display: inline-block;
+    border: 1px solid #374151;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .receipt-header {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .receipt-header h2 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .receipt-header p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: #374151;
+  }
+  .receipt-meta {
+    border-top: 1px dashed #9ca3af;
+    border-bottom: 1px dashed #9ca3af;
+    padding: 10px 0;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 4px 0;
+  }
+  .meta-label {
+    color: #6b7280;
+  }
+  .meta-value {
+    text-align: right;
+    font-weight: 600;
+  }
+  .receipt-items {
+    border-bottom: 1px dashed #9ca3af;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+  .item-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 5px 0;
+  }
+  .receipt-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .receipt-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #374151;
+  }
+  .receipt-footer .thanks {
+    margin: 0 0 10px 0;
+  }
+  .receipt-footer .dev-credit {
+    border-top: 1px dashed #d1d5db;
+    padding-top: 8px;
+    margin: 8px 0 0 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #4b5563;
+  }
+  .cut-divider {
+    max-width: 420px;
+    margin: 18px auto;
+    text-align: center;
+    font-size: 11px;
+    color: #6b7280;
+    letter-spacing: 0.5px;
+  }
+  @media print {
+    .receipt-page {
+      background: #ffffff;
+      padding: 0;
+    }
+    .receipt-actions {
+      display: none;
+    }
+    .receipt-card {
+      box-shadow: none;
+      max-width: 100%;
+      padding: 10px 6px;
+    }
+  }
+</style>
 
-  <div class="receipt-header">
-    <h2>MUJTABA ELECTRICAL SUPPLIERS</h2>
-    <p>Loitokitok</p>
-    <p>Tel: [Shop Tel]</p>
-    <p>Paybill 522533 &bull; Ac 8163185</p>
+<div class="receipt-page">
+  <div class="receipt-actions">
+    <button type="button" onclick="window.print()">Print Both Copies</button>
+    <a href="/">← Back to POS</a>
   </div>
 
-  <div class="receipt-meta">
-    <div><span>Order Ticket:</span> <strong>{{ sale.ticket_number|default:sale.id }}</strong></div>
-    <div><span>Date:</span> <span>{{ sale.created_at|date:"d/m/Y" }}</span></div>
-    <div><span>Time Issued:</span> <span>{{ sale.created_at|time:"h:i A" }}</span></div>
-    <div><span>Served By:</span> <span>{{ sale.served_by|default:"Counter Staff" }}</span></div>
-    <div><span>Customer:</span> <span>{{ sale.customer.name|default:"Walk-in Customer" }}</span></div>
-    <div><span>Payment:</span> <span>{{ sale.payment_method|default:"CASH" }}</span></div>
-  </div>
+  <!-- CUSTOMER COPY -->
+  <div class="receipt-card">
+    <div class="copy-badge-wrap">
+      <span class="copy-badge">CUSTOMER COPY</span>
+    </div>
 
-  <div class="receipt-items">
-    {% for item in items %}
+    <div class="receipt-header">
+      <h2>MUJTABA ELECTRICAL SUPPLIERS</h2>
+      <p>Loitokitok</p>
+      <p>Tel: [Shop Tel]</p>
+      <p>Paybill 522533 • Ac 8163185</p>
+    </div>
+
+    <div class="receipt-meta">
+      <div class="meta-row">
+        <span class="meta-label">Order Ticket:</span>
+        <span class="meta-value">{{ sale.ticket_number|default:sale.id }}</span>
+      </div>
+      {% if sale.receipt_number %}
+      <div class="meta-row">
+        <span class="meta-label">Receipt No:</span>
+        <span class="meta-value">{{ sale.receipt_number }}</span>
+      </div>
+      {% endif %}
+      <div class="meta-row">
+        <span class="meta-label">Date:</span>
+        <span class="meta-value">{{ sale.created_at|date:"d/m/Y" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Time Issued:</span>
+        <span class="meta-value">{{ sale.created_at|time:"H:i" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Served By:</span>
+        <span class="meta-value">{{ sale.served_by|default:"Counter Staff" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Customer:</span>
+        <span class="meta-value">{{ sale.customer.name|default:"Walk-in Customer" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Payment:</span>
+        <span class="meta-value">{{ sale.payment_method|default:"CASH" }}</span>
+      </div>
+    </div>
+
+    <div class="receipt-items">
+      {% for item in items %}
       <div class="item-row">
         <span>{{ item.quantity|floatformat:2 }}x {{ item.product.name }}</span>
         <span>KES {{ item.subtotal|floatformat:2 }}</span>
       </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
+
+    <div class="receipt-total">
+      <span>TOTAL:</span>
+      <span>KES {{ sale.total_amount|floatformat:2 }}</span>
+    </div>
+
+    <div class="receipt-footer">
+      <p class="thanks">Thank you for your business!</p>
+      <p class="dev-credit">
+        <strong>IMARA POS</strong><br>
+        Developed by Imara Tech<br>
+        Tel: 0790576915
+      </p>
+    </div>
   </div>
 
-  <div class="receipt-total">
-    <span>TOTAL:</span>
-    <span>KES {{ sale.total_amount|floatformat:2 }}</span>
-  </div>
+  <div class="cut-divider">---------------- ✂ CUT HERE ✂ ----------------</div>
 
-  <div class="receipt-footer">
-    <p>Thank you for your business!</p>
-    <p class="pos-credit">
-      <strong>IMARA POS</strong><br>
-      Developed by Imara Tech<br>
-      Tel: 0790576915
-    </p>
-  </div>
-</div>
+  <!-- BUSINESS / FILE COPY -->
+  <div class="receipt-card">
+    <div class="copy-badge-wrap">
+      <span class="copy-badge">BUSINESS / FILE COPY</span>
+    </div>
 
-<div class="cut-line">---------------- &✂; CUT HERE &✂; ----------------</div>
+    <div class="receipt-header">
+      <h2>MUJTABA ELECTRICAL SUPPLIERS</h2>
+      <p>Loitokitok</p>
+      <p>Tel: [Shop Tel]</p>
+      <p>Paybill 522533 • Ac 8163185</p>
+    </div>
 
-<div class="receipt-copy">
-  <div class="copy-badge">BUSINESS / FILE COPY</div>
+    <div class="receipt-meta">
+      <div class="meta-row">
+        <span class="meta-label">Order Ticket:</span>
+        <span class="meta-value">{{ sale.ticket_number|default:sale.id }}</span>
+      </div>
+      {% if sale.receipt_number %}
+      <div class="meta-row">
+        <span class="meta-label">Receipt No:</span>
+        <span class="meta-value">{{ sale.receipt_number }}</span>
+      </div>
+      {% endif %}
+      <div class="meta-row">
+        <span class="meta-label">Date:</span>
+        <span class="meta-value">{{ sale.created_at|date:"d/m/Y" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Time Issued:</span>
+        <span class="meta-value">{{ sale.created_at|time:"H:i" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Served By:</span>
+        <span class="meta-value">{{ sale.served_by|default:"Counter Staff" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Customer:</span>
+        <span class="meta-value">{{ sale.customer.name|default:"Walk-in Customer" }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Payment:</span>
+        <span class="meta-value">{{ sale.payment_method|default:"CASH" }}</span>
+      </div>
+    </div>
 
-  <div class="receipt-header">
-    <h2>MUJTABA ELECTRICAL SUPPLIERS</h2>
-    <p>Loitokitok</p>
-    <p>Tel: [Shop Tel]</p>
-    <p>Paybill 522533 &bull; Ac 8163185</p>
-  </div>
-
-  <div class="receipt-meta">
-    <div><span>Order Ticket:</span> <strong>{{ sale.ticket_number|default:sale.id }}</strong></div>
-    <div><span>Date:</span> <span>{{ sale.created_at|date:"d/m/Y" }}</span></div>
-    <div><span>Time Issued:</span> <span>{{ sale.created_at|time:"h:i A" }}</span></div>
-    <div><span>Served By:</span> <span>{{ sale.served_by|default:"Counter Staff" }}</span></div>
-    <div><span>Customer:</span> <span>{{ sale.customer.name|default:"Walk-in Customer" }}</span></div>
-    <div><span>Payment:</span> <span>{{ sale.payment_method|default:"CASH" }}</span></div>
-  </div>
-
-  <div class="receipt-items">
-    {% for item in items %}
+    <div class="receipt-items">
+      {% for item in items %}
       <div class="item-row">
         <span>{{ item.quantity|floatformat:2 }}x {{ item.product.name }}</span>
         <span>KES {{ item.subtotal|floatformat:2 }}</span>
       </div>
-    {% endfor %}
-  </div>
+      {% endfor %}
+    </div>
 
-  <div class="receipt-total">
-    <span>TOTAL:</span>
-    <span>KES {{ sale.total_amount|floatformat:2 }}</span>
-  </div>
+    <div class="receipt-total">
+      <span>TOTAL:</span>
+      <span>KES {{ sale.total_amount|floatformat:2 }}</span>
+    </div>
 
-  <div class="receipt-footer">
-    <p class="pos-credit">
-      <strong>IMARA POS</strong><br>
-      Developed by Imara Tech<br>
-      Tel: 0790576915
-    </p>
+    <div class="receipt-footer">
+      <p class="dev-credit">
+        <strong>IMARA POS</strong><br>
+        Developed by Imara Systems Tech<br>
+        Tel: 0790576915
+      </p>
+    </div>
   </div>
 </div>
