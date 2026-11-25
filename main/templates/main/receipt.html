@@ -1,126 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Receipt {{ sale.receipt_no }} - IMARA POS</title>
-    <style>
-        body { font-family: 'Courier New', Courier, monospace; background: #e2e8f0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .receipt-box { background: white; width: 320px; padding: 20px; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .center { text-align: center; }
-        .copy-badge { display: inline-block; border: 1px solid #000; padding: 2px 8px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
-        .store-name { font-weight: bold; font-size: 17px; margin-bottom: 2px; }
-        .tagline { font-size: 11px; color: #475569; margin-bottom: 10px; }
-        .divider { border-top: 1px dashed #94a3b8; margin: 10px 0; }
-        .cut-line { width: 320px; text-align: center; border-bottom: 2px dashed #64748b; line-height: 0.1em; margin: 15px 0 25px 0; font-size: 11px; color: #64748b; }
-        .cut-line span { background: #e2e8f0; padding: 0 10px; }
-        .details, .totals { font-size: 12px; margin: 8px 0; }
-        .row { display: flex; justify-content: space-between; margin-bottom: 4px; gap: 8px; }
-        .total-row { font-weight: bold; font-size: 14px; margin-top: 8px; }
-        .actions { margin-bottom: 20px; text-align: center; }
-        .btn { display: inline-block; padding: 10px 18px; background: #0b2e8a; color: white; text-decoration: none; border-radius: 4px; font-family: Arial, sans-serif; font-size: 13px; border: none; cursor: pointer; margin: 0 5px; }
-        .btn-secondary { background: #64748b; }
-        @media print {
-            body { background: white; padding: 0; }
-            .receipt-box { box-shadow: none; width: 100%; padding: 5px 0; margin-bottom: 5px; }
-            .cut-line span { background: white; }
-            .actions { display: none; }
-        }
-    </style>
-</head>
-<body>
-    <div class="actions">
-        <button class="btn" onclick="window.print()">Print Both Copies</button>
-        <a href="{% url 'pos_dashboard' %}" class="btn btn-secondary">&larr; Back to POS</a>
-    </div>
+<div class="receipt-copy">
+  <div class="copy-badge">CUSTOMER COPY</div>
 
-    <!-- CUSTOMER COPY -->
-    <div class="receipt-box">
-        <div class="center">
-            <div class="copy-badge">CUSTOMER COPY</div>
-            <div class="store-name">MUJTABA ELECTRICAL SUPPLIERS</div>
-            <div class="tagline">IMARA POS &bull; Electrical &amp; CCTV Specialists</div>
-        </div>
-        <div class="divider"></div>
-        <div class="details">
-            <div class="row"><span>Order Ticket:</span> <strong>{{ sale.ticket_no }}</strong></div>
-            <div class="row"><span>Receipt No:</span> <span>{{ sale.receipt_no }}</span></div>
-            <div class="row"><span>Date:</span> <span>{{ sale.date|date:"d/m/Y H:i" }}</span></div>
-            <div class="row">
-                <span>Served By:</span>
-                <span>
-                    {% if sale.served_by %}
-                        {{ sale.served_by.get_full_name|default:sale.served_by.username }}
-                    {% else %}
-                        Counter Staff
-                    {% endif %}
-                </span>
-            </div>
-            <div class="row"><span>Customer:</span> <span>{% if sale.customer %}{{ sale.customer.name }}{% else %}Walk-in{% endif %}</span></div>
-            <div class="row"><span>Payment:</span> <span>{{ sale.payment_method }}</span></div>
-            {% if sale.mpesa_code %}
-            <div class="row"><span>M-Pesa Ref:</span> <span>{{ sale.mpesa_code }}</span></div>
-            {% endif %}
-            {% if sale.payment_method == 'CREDIT' and sale.customer %}
-            <div class="row"><span>Total Credit Bal:</span> <strong>KES {{ sale.customer.credit_balance }}</strong></div>
-            {% endif %}
-        </div>
-        <div class="divider"></div>
-        <div class="totals">
-            {% for item in sale.items.all %}
-            <div class="row"><span>{{ item.quantity }}x {{ item.product.name }}</span><span>KES {{ item.line_total }}</span></div>
-            {% empty %}
-            <div class="row"><span>No line items</span><span>KES 0.00</span></div>
-            {% endfor %}
-        </div>
-        <div class="divider"></div>
-        <div class="row total-row"><span>TOTAL:</span><span>KES {{ sale.total_amount }}</span></div>
-        <div class="center" style="font-size: 11px; margin-top: 10px;">Thank you for your business!</div>
-    </div>
+  <div class="receipt-header">
+    <h2>MUJTABA ELECTRICAL SUPPLIERS</h2>
+    <p>Loitokitok</p>
+    <p>Tel: [Shop Tel]</p>
+    <p>Paybill 522533 &bull; Ac 8163185</p>
+  </div>
 
-    <div class="cut-line"><span>&#9986; CUT HERE &#9986;</span></div>
+  <div class="receipt-meta">
+    <div><span>Order Ticket:</span> <strong>{{ sale.ticket_number|default:sale.id }}</strong></div>
+    <div><span>Date:</span> <span>{{ sale.created_at|date:"d/m/Y" }}</span></div>
+    <div><span>Time Issued:</span> <span>{{ sale.created_at|time:"h:i A" }}</span></div>
+    <div><span>Served By:</span> <span>{{ sale.served_by|default:"Counter Staff" }}</span></div>
+    <div><span>Customer:</span> <span>{{ sale.customer.name|default:"Walk-in Customer" }}</span></div>
+    <div><span>Payment:</span> <span>{{ sale.payment_method|default:"CASH" }}</span></div>
+  </div>
 
-    <!-- BUSINESS / FILE COPY -->
-    <div class="receipt-box">
-        <div class="center">
-            <div class="copy-badge">BUSINESS / FILE COPY</div>
-            <div class="store-name">MUJTABA ELECTRICAL SUPPLIERS</div>
-        </div>
-        <div class="divider"></div>
-        <div class="details">
-            <div class="row"><span>Order Ticket:</span> <strong>{{ sale.ticket_no }}</strong></div>
-            <div class="row"><span>Receipt No:</span> <span>{{ sale.receipt_no }}</span></div>
-            <div class="row"><span>Date:</span> <span>{{ sale.date|date:"d/m/Y H:i" }}</span></div>
-            <div class="row">
-                <span>Served By:</span>
-                <span>
-                    {% if sale.served_by %}
-                        {{ sale.served_by.get_full_name|default:sale.served_by.username }}
-                    {% else %}
-                        Counter Staff
-                    {% endif %}
-                </span>
-            </div>
-            <div class="row"><span>Customer:</span> <span>{% if sale.customer %}{{ sale.customer.name }}{% else %}Walk-in{% endif %}</span></div>
-            <div class="row"><span>Payment:</span> <span>{{ sale.payment_method }}</span></div>
-            {% if sale.mpesa_code %}
-            <div class="row"><span>M-Pesa Ref:</span> <span>{{ sale.mpesa_code }}</span></div>
-            {% endif %}
-        </div>
-        <div class="divider"></div>
-        <div class="totals">
-            {% for item in sale.items.all %}
-            <div class="row"><span>{{ item.quantity }}x {{ item.product.name }}</span><span>KES {{ item.line_total }}</span></div>
-            {% empty %}
-            <div class="row"><span>No line items</span><span>KES 0.00</span></div>
-            {% endfor %}
-        </div>
-        <div class="divider"></div>
-        <div class="row total-row"><span>TOTAL:</span><span>KES {{ sale.total_amount }}</span></div>
-        {% if sale.payment_method == 'CREDIT' %}
-        <div style="margin-top: 20px; font-size: 11px;">
-            Customer Sign: ______________________
-        </div>
-        {% endif %}
-    </div>
-</body>
-</html>
+  <div class="receipt-items">
+    {% for item in items %}
+      <div class="item-row">
+        <span>{{ item.quantity|floatformat:2 }}x {{ item.product.name }}</span>
+        <span>KES {{ item.subtotal|floatformat:2 }}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="receipt-total">
+    <span>TOTAL:</span>
+    <span>KES {{ sale.total_amount|floatformat:2 }}</span>
+  </div>
+
+  <div class="receipt-footer">
+    <p>Thank you for your business!</p>
+    <p class="pos-credit">
+      <strong>IMARA POS</strong><br>
+      Developed by Imara Tech<br>
+      Tel: 0790576915
+    </p>
+  </div>
+</div>
+
+<div class="cut-line">---------------- &✂; CUT HERE &✂; ----------------</div>
+
+<div class="receipt-copy">
+  <div class="copy-badge">BUSINESS / FILE COPY</div>
+
+  <div class="receipt-header">
+    <h2>MUJTABA ELECTRICAL SUPPLIERS</h2>
+    <p>Loitokitok</p>
+    <p>Tel: [Shop Tel]</p>
+    <p>Paybill 522533 &bull; Ac 8163185</p>
+  </div>
+
+  <div class="receipt-meta">
+    <div><span>Order Ticket:</span> <strong>{{ sale.ticket_number|default:sale.id }}</strong></div>
+    <div><span>Date:</span> <span>{{ sale.created_at|date:"d/m/Y" }}</span></div>
+    <div><span>Time Issued:</span> <span>{{ sale.created_at|time:"h:i A" }}</span></div>
+    <div><span>Served By:</span> <span>{{ sale.served_by|default:"Counter Staff" }}</span></div>
+    <div><span>Customer:</span> <span>{{ sale.customer.name|default:"Walk-in Customer" }}</span></div>
+    <div><span>Payment:</span> <span>{{ sale.payment_method|default:"CASH" }}</span></div>
+  </div>
+
+  <div class="receipt-items">
+    {% for item in items %}
+      <div class="item-row">
+        <span>{{ item.quantity|floatformat:2 }}x {{ item.product.name }}</span>
+        <span>KES {{ item.subtotal|floatformat:2 }}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="receipt-total">
+    <span>TOTAL:</span>
+    <span>KES {{ sale.total_amount|floatformat:2 }}</span>
+  </div>
+
+  <div class="receipt-footer">
+    <p class="pos-credit">
+      <strong>IMARA POS</strong><br>
+      Developed by Imara Tech<br>
+      Tel: 0790576915
+    </p>
+  </div>
+</div>
