@@ -387,6 +387,29 @@ def pos_view(request):
 pos_dashboard = pos_view
 
 
+def _get_sale_items_manager(sale):
+    for attr in ("items", "saleitem_set", "sale_items"):
+        mgr = getattr(sale, attr, None)
+        if mgr is not None and hasattr(mgr, "all"):
+            return mgr
+    for rel in Sale._meta.related_objects:
+        if rel.related_model is SaleItem:
+            accessor = rel.get_accessor_name()
+            mgr = getattr(sale, accessor, None)
+            if mgr is not None and hasattr(mgr, "all"):
+                return mgr
+    return None
+
+
 def sale_receipt(request, sale_id):
-    sale = get_object_or_404(Sale.objects.prefetch_related("items__product"), id=sale_id)
-    return render(request, "main/receipt.html", {"sale": sale})
+    sale = get_object_or_404(Sale, id=sale_id)
+    items_mgr = _get_sale_items_manager(sale)
+    receipt_items = list(items_mgr.select_related("product").all()) if items_mgr is not None else []
+    return render(
+        request,
+        "main/receipt.html",
+        {
+            "sale": sale,
+            "receipt_items": receipt_items,
+        },
+    )
