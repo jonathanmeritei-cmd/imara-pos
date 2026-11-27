@@ -126,6 +126,7 @@
       border-top: 1px dashed #000;
       text-align: center;
       font-size: 10px;
+      line-height: 1.4;
     }
 
     .cut-spacer {
@@ -181,8 +182,25 @@
         <div class="divider"></div>
 
         <div class="row">
-          <span>Receipt #:</span>
+          <span>Ticket #:</span>
           <span class="bold">{{ sale.ticket_no|default:sale.id }}</span>
+        </div>
+
+        <div class="row">
+          <span>Served by:</span>
+          <span class="bold">
+            {% if sale.served_by %}
+              {{ sale.served_by.get_full_name|default:sale.served_by.username|default:sale.served_by }}
+            {% elif sale.cashier %}
+              {{ sale.cashier.get_full_name|default:sale.cashier.username|default:sale.cashier }}
+            {% elif sale.user %}
+              {{ sale.user.get_full_name|default:sale.user.username|default:sale.user }}
+            {% elif request.user.is_authenticated %}
+              {{ request.user.get_full_name|default:request.user.username }}
+            {% else %}
+              Staff
+            {% endif %}
+          </span>
         </div>
 
         {% with dt=sale.created_at|default:sale.date %}
@@ -304,13 +322,13 @@
         </div>
 
         <div class="center" style="font-size: 11px; margin-top: 4px;">
-          Thank you for choosing Mujtaba ElectricaL Suppliers!
+          Thank you for choosing Mujtaba Electrical Suppliers!
         </div>
 
         <div class="footer-brand">
-          <div class="bold">IMARA POS</div>
-          <div>Developed by Imara System Tech 
-          <div>Tel: 0790576915</div>
+          <div class="bold">IMARA POS • Imara Systems Tech</div>
+          <div>POS Systems • Web Apps • Business Automation</div>
+          <div>Need a POS? Call / WhatsApp: 0790 576 915</div>
         </div>
       </div>
 
