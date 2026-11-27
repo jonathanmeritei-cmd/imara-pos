@@ -434,6 +434,56 @@
     </style>
 </head>
 <body>
+   
+   <header class="pos-topbar" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:#111827;color:#fff;border-radius:8px;margin-bottom:14px;">
+  <div>
+    <div style="font-size:18px;font-weight:700;letter-spacing:0.3px;">
+      MUJTABA ELECTRICAL SUPPLIERS
+    </div>
+    <div style="font-size:13px;color:#d1d5db;">
+      Loitokitok, Kenya &bull; Tel: <strong>0707 937634</strong>
+    </div>
+  </div>
+
+  <div style="text-align:center;">
+    <div id="liveDate" style="font-size:13px;font-weight:600;"></div>
+    <div id="liveClock" style="font-size:15px;font-weight:700;color:#34d399;font-family:monospace;"></div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+    <button type="button" onclick="window.location.reload()" style="padding:8px 12px;border-radius:6px;border:1px solid #374151;background:#1f2937;color:#fff;cursor:pointer;">
+      Refresh
+    </button>
+    <button type="button" onclick="toggleCalcModal()" style="padding:8px 12px;border-radius:6px;border:1px solid #374151;background:#1f2937;color:#fff;cursor:pointer;">
+      Calculator
+    </button>
+    <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer;font-weight:600;">
+      <input type="checkbox" id="settingsToggle" onchange="toggleSettingsPanel(this.checked)" />
+      <span>Settings</span>
+    </label>
+  </div>
+</header>
+<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:14px;">
+  <strong>Scan Mode:</strong>
+  <button type="button" id="modeSellBtn" onclick="setScanMode('sell')" style="padding:6px 12px;border-radius:6px;border:none;background:#059669;color:#fff;font-weight:600;cursor:pointer;">
+    Scan to Sell
+  </button>
+  <button type="button" id="modeStockBtn" onclick="setScanMode('stock')" style="padding:6px 12px;border-radius:6px;border:none;background:#4b5563;color:#fff;font-weight:600;cursor:pointer;">
+    Scan to Add Stock
+  </button>
+
+  <input
+    type="text"
+    id="barcodeScanInput"
+    placeholder="Scan barcode / SKU / Serial & press Enter..."
+    onkeydown="handleBarcodeKey(event)"
+    style="flex:1;min-width:220px;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;"
+  />
+
+  <button type="button" onclick="autoFillSkuSerial()" style="padding:8px 12px;border-radius:6px;border:1px solid #2563eb;background:#eff6ff;color:#1d4ed8;font-weight:600;cursor:pointer;">
+    Generate SKU &amp; Serial
+  </button>
+</div>
     <aside class="sidebar">
         <div>
             <div class="brand-box">
@@ -1276,5 +1326,92 @@
     }, 800);
   </script>
 {% endif %}
+<script>
+  let currentScanMode = "sell";
+
+  function updateClock() {
+    const now = new Date();
+    const dateEl = document.getElementById("liveDate");
+    const clockEl = document.getElementById("liveClock");
+    if (dateEl) {
+      dateEl.textContent = now.toLocaleDateString("en-GB", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    }
+    if (clockEl) {
+      clockEl.textContent = now.toLocaleTimeString("en-GB", { hour12: false });
+    }
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function toggleSettingsPanel(isOpen) {
+    const panel = document.getElementById("settingsPanel");
+    if (panel) panel.style.display = isOpen ? "block" : "none";
+  }
+
+  function toggleCalcModal() {
+    const modal = document.getElementById("calcModal");
+    if (!modal) return;
+    modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+  }
+
+  function setScanMode(mode) {
+    currentScanMode = mode;
+    const sellBtn = document.getElementById("modeSellBtn");
+    const stockBtn = document.getElementById("modeStockBtn");
+    const input = document.getElementById("barcodeScanInput");
+
+    if (mode === "sell") {
+      sellBtn.style.background = "#059669";
+      stockBtn.style.background = "#4b5563";
+      input.placeholder = "Scan item to ADD TO CART (Sell) & press Enter...";
+    } else {
+      stockBtn.style.background = "#2563eb";
+      sellBtn.style.background = "#4b5563";
+      input.placeholder = "Scan item to RESTOCK (+1 / Qty) & press Enter...";
+    }
+    input.focus();
+  }
+
+  function handleBarcodeKey(event) {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    const code = event.target.value.trim();
+    if (!code) return;
+
+    console.log("Scanned:", code, "Mode:", currentScanMode);
+    event.target.value = "";
+  }
+
+  function autoFillSkuSerial() {
+    const nameInput = document.querySelector('input[name="name"], #id_name');
+    const skuInput = document.querySelector('input[name="sku"], #id_sku');
+    const serialInput = document.querySelector('input[name="serial_number"], #id_serial_number');
+
+    const base = (nameInput && nameInput.value ? nameInput.value : "ITEM")
+      .replace(/[^a-zA-Z]/g, "")
+      .toUpperCase()
+      .slice(0, 3)
+      .padEnd(3, "X");
+
+    const now = new Date();
+    const ymd = [
+      String(now.getFullYear()).slice(-2),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("");
+
+    const skuCode = `MES-${base}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const snCode = `SN-${ymd}-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    if (skuInput) skuInput.value = skuCode;
+    if (serialInput) serialInput.value = snCode;
+  }
+</script>
+</body>
 </body>
 </html>
