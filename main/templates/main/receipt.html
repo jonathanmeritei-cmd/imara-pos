@@ -162,7 +162,7 @@
 </head>
 <body>
   <div class="toolbar no-print">
-    <button type="button" class="btn" onclick="window.print()">Print Receipt</button>
+    <button type="button" class="btn" onclick="triggerPrint()">Print Receipt</button>
     <a href="/" class="btn secondary">Back to POS</a>
   </div>
 
@@ -172,9 +172,7 @@
         <div class="center">
           <div class="shop-name">MUJTABA ELECTRICAL SUPPLIERS</div>
           <div>Loitokitok, Kenya</div>
-          {% if sale.phone %}
-            <div>Tel: {{ sale.phone }}</div>
-          {% endif %}
+          <div>Tel: 0707 937634</div>
           <div class="bold" style="margin-top: 3px;">
             {% if copy_label == "C" %}CUSTOMER COPY{% else %}BUSINESS COPY{% endif %}
           </div>
@@ -306,7 +304,7 @@
         </div>
 
         <div class="center" style="font-size: 11px; margin-top: 4px;">
-          Thank you for your business!
+          Thank you for choosing Mujtaba ElectricaL Suppliers!
         </div>
 
         <div class="footer-brand">
@@ -323,5 +321,17 @@
 
     <div class="auto-cut-end"></div>
   </div>
+
+  <script>
+    function triggerPrint() {
+      window.print();
+    }
+
+    window.addEventListener("load", function () {
+      setTimeout(function () {
+        window.print();
+      }, 300);
+    });
+  </script>
 </body>
 </html>
