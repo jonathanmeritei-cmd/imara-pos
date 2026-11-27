@@ -1,1417 +1,1583 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMARA POS — Mujtaba Electrical Suppliers</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --cobalt: #0b2e8a;
-            --cobalt-dark: #061847;
-            --cobalt-mid: #103aa8;
-            --cobalt-light: #dbeafe;
-            --gold: #f59e0b;
-            --gold-dark: #b45309;
-            --gold-soft: #fef3c7;
-            --red: #dc2626;
-            --red-dark: #991b1b;
-            --red-soft: #fee2e2;
-            --green: #16a34a;
-            --green-dark: #166534;
-            --green-soft: #dcfce7;
-            --bg: #eef2f7;
-            --card: #ffffff;
-            --text: #0f172a;
-            --muted: #64748b;
-            --border: #e2e8f0;
-            --shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IMARA POS — {{ shop_name|default:"MUJTABA ELECTRICAL SUPPLIERS" }}</title>
+  <style>
+    :root {
+      --bg-surface: #111827;
+      --bg-card: #ffffff;
+      --bg-muted: #f8fafc;
+      --bg-subtle: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-soft: #64748b;
+      --text-inverse: #f8fafc;
+      --accent: #ea580c;
+      --accent-hover: #c2410c;
+      --success: #15803d;
+      --success-bg: #f0fdf4;
+      --danger: #b91c1c;
+      --danger-bg: #fef2f2;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.24);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --base-scale: 1;
+    }
 
-        * { box-sizing: border-box; }
+    body[data-density="compact"] {
+      --base-scale: 0.94;
+    }
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-            font-size: 15px;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        h1, h2, h3, .brand-name, .page-heading, .stat .val, .cart-total-bar {
-            font-family: "Plus Jakarta Sans", "Inter", "Segoe UI", sans-serif;
-            letter-spacing: -0.02em;
-        }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      font-size: calc(15px * var(--base-scale));
+      background: var(--bg-subtle);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
 
-        .stat .val, .prod-price, .cart-total-bar, td, th, .z-row strong {
-            font-variant-numeric: tabular-nums;
-        }
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
 
-        .sidebar {
-            width: 260px;
-            flex-shrink: 0;
-            background: linear-gradient(180deg, var(--cobalt-dark) 0%, var(--cobalt) 55%, var(--cobalt-mid) 100%);
-            color: #ffffff;
-            border-right: 4px solid var(--gold);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px 14px;
-        }
+    .sidebar {
+      width: 268px;
+      min-width: 268px;
+      background: var(--bg-surface);
+      color: var(--text-inverse);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid #1e293b;
+      z-index: 30;
+    }
 
-        .brand-box {
-            padding-bottom: 16px;
-            margin-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-        }
+    .sidebar-brand {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid #1e293b;
+    }
 
-        .brand-badge {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--cobalt-dark);
-            font-weight: 900;
-            font-size: 11px;
-            padding: 3px 9px;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-        }
+    .brand-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fb923c;
+      background: rgba(234, 88, 12, 0.14);
+      border: 1px solid rgba(251, 146, 60, 0.3);
+      padding: 4px 8px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
 
-        .brand-name { margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2; }
-        .brand-name span { color: var(--gold); }
-        .brand-sub { font-size: 11.5px; color: #fde68a; margin-top: 6px; line-height: 1.4; }
+    .shop-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+    }
 
-        .nav-section-label {
-            font-size: 10.5px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: #93c5fd;
-            margin: 10px 4px 6px 4px;
-        }
+    .shop-meta {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
 
-        .nav-list { display: flex; flex-direction: column; gap: 7px; }
+    .nav-list {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
 
-        .nav-btn {
-            width: 100%;
-            text-align: left;
-            padding: 11px 13px;
-            border-radius: 9px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.07);
-            color: #f8fafc;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+    }
 
-        .nav-btn:hover { background: rgba(245, 158, 11, 0.2); border-color: var(--gold); }
-        .nav-btn.active {
-            background: var(--gold);
-            color: var(--cobalt-dark);
-            border-color: var(--gold);
-            box-shadow: 0 3px 0 var(--gold-dark);
-        }
+    .nav-btn:hover {
+      background: #1e293b;
+      color: #ffffff;
+    }
 
-        .nav-tag {
-            font-size: 10.5px;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 999px;
-            background: rgba(0, 0, 0, 0.25);
-            color: #fff;
-        }
-        .nav-btn.active .nav-tag { background: var(--cobalt-dark); color: var(--gold); }
+    .nav-btn.is-active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: #fb923c;
+    }
 
-        .sidebar-info-card {
-            margin-top: 18px;
-            background: rgba(6, 24, 71, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 9px;
-            padding: 12px;
-            font-size: 12px;
-        }
-        .sidebar-info-card strong { display: block; color: var(--gold); margin-bottom: 4px; }
-        .sidebar-info-card p { margin: 0; color: #dbeafe; line-height: 1.45; font-size: 11.5px; }
+    .nav-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+    }
 
-        .sidebar-footer { padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.18); }
-        .admin-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            text-decoration: none;
-            background: var(--red);
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 13.5px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 0 var(--red-dark);
-        }
-        .admin-link:hover { background: #b91c1c; }
+    .sidebar-card {
+      margin: 12px;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: #1e293b;
+      border: 1px solid #334155;
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
 
-        .main-panel { flex: 1; padding: 20px 24px 36px 24px; overflow-x: hidden; }
+    .sidebar-card strong {
+      display: block;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
 
-        .top-strip {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+    .main-column {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-subtle);
+    }
 
-        .page-heading { margin: 0; font-size: 23px; font-weight: 800; color: var(--cobalt-dark); }
-        .page-sub { font-size: 12.5px; color: #475569; }
+    .topbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: var(--shadow-sm);
+    }
 
-        .pill-bar { display: flex; gap: 8px; flex-wrap: wrap; }
-        .quick-tile {
-            border: none;
-            border-radius: 8px;
-            padding: 9px 13px;
-            font-family: "Inter", "Segoe UI", sans-serif;
-            font-weight: 800;
-            font-size: 12.5px;
-            color: #ffffff;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: var(--shadow);
-        }
-        .quick-tile:hover { filter: brightness(0.95); }
-        .tile-blue { background: var(--cobalt); }
-        .tile-gold { background: #d97706; }
-        .tile-red { background: var(--red); }
-        .tile-green { background: var(--green); }
-        .tile-dark { background: #0f172a; border: 1px solid var(--gold); color: var(--gold); }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
-        .stat {
-            background: var(--card);
-            padding: 15px 16px;
-            border-radius: 10px;
-            border-top: 4px solid var(--cobalt);
-            border-right: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            border-left: 1px solid var(--border);
-            box-shadow: var(--shadow);
-        }
-        .stat.gold { border-top-color: var(--gold); }
-        .stat.green { border-top-color: var(--green); }
-        .stat.red { border-top-color: var(--red); }
-        .stat small { color: #475569; font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
-        .stat .val { font-size: 21px; font-weight: 800; margin-top: 5px; color: var(--cobalt-dark); }
-        .stat.green .val { color: var(--green-dark); }
-        .stat.red .val { color: var(--red); }
-        .stat-foot { font-size: 12px; color: #475569; margin-top: 4px; }
+    .mobile-menu-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 18px;
+      cursor: pointer;
+    }
 
-        .grid-2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; }
-        .card {
-            background: var(--card);
-            border-radius: 10px;
-            padding: 18px 20px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            margin-bottom: 18px;
-        }
-        .card-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        h2 { margin: 0 0 12px 0; font-size: 17px; font-weight: 800; color: var(--cobalt-dark); }
-        .card-header-row h2 { margin: 0; }
+    .page-heading {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+    }
 
-        label { display: block; margin-top: 11px; font-weight: 700; font-size: 13.5px; color: #0f172a; }
-        .search-input, input[type="text"], input[type="number"], input[type="email"], select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 7px;
-            font-family: "Inter", "Segoe UI", sans-serif;
-            font-size: 14.5px;
-            font-weight: 500;
-            margin-top: 4px;
-            background: #ffffff;
-            color: var(--text);
-        }
-        .search-input:focus, input:focus, select:focus {
-            outline: none;
-            border-color: var(--cobalt);
-            box-shadow: 0 0 0 3px rgba(11, 46, 138, 0.12);
-        }
+    .page-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
 
-        .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 11px; margin-top: 12px; }
-        .prod-tile {
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            padding: 11px;
-            background: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .prod-tile:hover { border-color: var(--cobalt); }
-        .prod-tile strong { font-size: 14px; font-weight: 700; color: var(--cobalt-dark); line-height: 1.3; }
-        .prod-price { color: var(--red); font-weight: 800; font-size: 14.5px; margin: 5px 0; }
-        .prod-stock { font-size: 12px; color: #475569; }
-        .mode-select {
-            margin-top: 7px;
-            padding: 6px 8px;
-            font-size: 12px;
-            font-weight: 700;
-            border-radius: 6px;
-            background: var(--gold-soft);
-            border-color: var(--gold);
-            color: var(--cobalt-dark);
-        }
+    .topbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .add-btn {
-            margin-top: 8px;
-            width: 100%;
-            padding: 8px 10px;
-            border: none;
-            border-radius: 7px;
-            background: var(--cobalt);
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .add-btn:hover { background: var(--cobalt-dark); }
-        .add-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 13px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
 
-        .cart-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 9px 0;
-            border-bottom: 1px dashed var(--border);
-            font-size: 13.5px;
-            gap: 8px;
-        }
-        .qty-controls { display: flex; align-items: center; gap: 4px; }
-        .qty-btn {
-            padding: 3px 9px;
-            border: 1px solid #cbd5e1;
-            background: #f8fafc;
-            color: var(--cobalt-dark);
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 13.5px;
-        }
-        .qty-btn:hover { background: var(--cobalt-light); }
+    .btn:hover {
+      background: var(--bg-subtle);
+    }
 
-        .cart-total-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 800;
-            font-size: 19px;
-            margin-top: 12px;
-            padding-top: 11px;
-            border-top: 2px solid var(--cobalt);
-        }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
 
-        .checkout-btn {
-            width: 100%;
-            margin-top: 14px;
-            padding: 12px 14px;
-            border: none;
-            border-radius: 8px;
-            background: var(--red);
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
-            box-shadow: 0 2px 0 var(--red-dark);
-        }
-        .checkout-btn:hover { background: #b91c1c; }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
 
-        .clear-cart-btn {
-            border: 1px solid #cbd5e1;
-            background: #f8fafc;
-            color: #334155;
-            font-weight: 700;
-            font-size: 12px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .clear-cart-btn:hover { background: #e2e8f0; }
+    .btn-success {
+      background: var(--success);
+      border-color: var(--success);
+      color: #ffffff;
+    }
 
-        .primary-btn {
-            margin-top: 13px;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 7px;
-            background: var(--cobalt);
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 13.5px;
-            cursor: pointer;
-        }
-        .primary-btn:hover { background: var(--cobalt-dark); }
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-        th, td { text-align: left; padding: 10px 11px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
-        th { background: #f8fafc; color: var(--cobalt-dark); font-weight: 800; }
+    .settings-bar {
+      display: none;
+      background: #fffbeb;
+      border-bottom: 1px solid #fde68a;
+      padding: 12px 20px;
+    }
 
-        .badge-low { color: var(--red); font-weight: 800; }
-        .badge-ok { color: var(--green-dark); font-weight: 700; }
+    .settings-bar.is-open {
+      display: block;
+    }
 
-        .z-box { max-width: 780px; }
-        .z-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 4px;
-            border-bottom: 1px dashed var(--border);
-            font-size: 14.5px;
-        }
-        .z-total {
-            font-weight: 800;
-            font-size: 18px;
-            color: var(--cobalt-dark);
-            border-top: 2px solid var(--cobalt);
-            border-bottom: none;
-            margin-top: 10px;
-            padding-top: 14px;
-        }
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      align-items: center;
+    }
 
-        .banner-err {
-            background: var(--red-soft);
-            color: var(--red);
-            border-left: 4px solid var(--red);
-            padding: 11px 14px;
-            border-radius: 7px;
-            font-weight: 800;
-            margin-bottom: 14px;
-            font-size: 13.5px;
-        }
-        .banner-ok {
-            background: var(--gold-soft);
-            color: #92400e;
-            border-left: 4px solid var(--gold);
-            padding: 11px 14px;
-            border-radius: 7px;
-            font-weight: 800;
-            margin-bottom: 14px;
-            font-size: 13.5px;
-        }
-        .hidden { display: none !important; }
+    .setting-item {
+      background: #ffffff;
+      border: 1px solid #fcd34d;
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+    }
 
-        @media print {
-            .sidebar, .top-strip, .stats, .no-print { display: none !important; }
-            body { background: #ffffff; display: block; }
-            .main-panel { padding: 0; }
-            .card { box-shadow: none; border: 1px solid #000000; max-width: 100%; }
-        }
+    .content-container {
+      padding: 18px 20px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 1560px;
+      width: 100%;
+      margin: 0 auto;
+    }
 
-        @media (max-width: 960px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 4px solid var(--gold); }
-            .stats, .grid-2 { grid-template-columns: 1fr; }
-        }
-    </style>
+    .alert {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .alert-error {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+
+    .dashboard-section {
+      display: block;
+    }
+
+    .dashboard-section.is-hidden {
+      display: none;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 15px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kpi-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-soft);
+    }
+
+    .kpi-value {
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+
+    .kpi-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.is-active {
+      display: block;
+    }
+
+    .pos-layout,
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.9fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .two-col-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg-muted);
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--text-main);
+      font-size: 13.5px;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(234, 88, 12, 0.25);
+      border-color: var(--accent);
+    }
+
+    .input-with-btn {
+      display: flex;
+      gap: 6px;
+      align-items: stretch;
+    }
+
+    .input-with-btn input {
+      flex: 1;
+      font-family: var(--font-mono);
+    }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .product-tile {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .product-tile:hover {
+      border-color: var(--accent);
+    }
+
+    .product-name {
+      font-weight: 700;
+      font-size: 13.5px;
+    }
+
+    .product-sku {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+
+    .product-price {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--bg-muted);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-soft);
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .calc-modal {
+      display: none;
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 296px;
+      background: var(--bg-surface);
+      color: #ffffff;
+      border: 1px solid #334155;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      z-index: 60;
+      overflow: hidden;
+    }
+
+    .calc-modal.is-open {
+      display: block;
+    }
+
+    .calc-header {
+      padding: 10px 14px;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .calc-screen {
+      padding: 12px 14px;
+      background: #090d16;
+      text-align: right;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .calc-expr {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: #94a3b8;
+      min-height: 16px;
+    }
+
+    .calc-display {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2px;
+      overflow-x: auto;
+    }
+
+    .calc-keys {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 10px;
+    }
+
+    .calc-key {
+      padding: 11px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .calc-key:hover {
+      background: #334155;
+    }
+
+    .calc-key.op {
+      background: #273549;
+      color: #fb923c;
+    }
+
+    .calc-key.eq {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .app-footer {
+      background: var(--bg-surface);
+      color: #cbd5e1;
+      padding: 14px 20px;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      margin-top: auto;
+    }
+
+    .app-footer strong {
+      color: #ffffff;
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .pos-layout,
+      .two-col-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        bottom: 0;
+        transition: left 0.2s ease;
+      }
+      .sidebar.is-open {
+        left: 0;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body>
-   
-   <header class="pos-topbar" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:#111827;color:#fff;border-radius:8px;margin-bottom:14px;">
-  <div>
-    <div style="font-size:18px;font-weight:700;letter-spacing:0.3px;">
-      MUJTABA ELECTRICAL SUPPLIERS
-    </div>
-    <div style="font-size:13px;color:#d1d5db;">
-      Loitokitok, Kenya &bull; Tel: <strong>0707 937634</strong>
-    </div>
-  </div>
-
-  <div style="text-align:center;">
-    <div id="liveDate" style="font-size:13px;font-weight:600;"></div>
-    <div id="liveClock" style="font-size:15px;font-weight:700;color:#34d399;font-family:monospace;"></div>
-  </div>
-
-  <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
-    <button type="button" onclick="window.location.reload()" style="padding:8px 12px;border-radius:6px;border:1px solid #374151;background:#1f2937;color:#fff;cursor:pointer;">
-      Refresh
-    </button>
-    <button type="button" onclick="toggleCalcModal()" style="padding:8px 12px;border-radius:6px;border:1px solid #374151;background:#1f2937;color:#fff;cursor:pointer;">
-      Calculator
-    </button>
-    <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:6px;background:#2563eb;color:#fff;cursor:pointer;font-weight:600;">
-      <input type="checkbox" id="settingsToggle" onchange="toggleSettingsPanel(this.checked)" />
-      <span>Settings</span>
-    </label>
-  </div>
-</header>
-<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:14px;">
-  <strong>Scan Mode:</strong>
-  <button type="button" id="modeSellBtn" onclick="setScanMode('sell')" style="padding:6px 12px;border-radius:6px;border:none;background:#059669;color:#fff;font-weight:600;cursor:pointer;">
-    Scan to Sell
-  </button>
-  <button type="button" id="modeStockBtn" onclick="setScanMode('stock')" style="padding:6px 12px;border-radius:6px;border:none;background:#4b5563;color:#fff;font-weight:600;cursor:pointer;">
-    Scan to Add Stock
-  </button>
-
-  <input
-    type="text"
-    id="barcodeScanInput"
-    placeholder="Scan barcode / SKU / Serial & press Enter..."
-    onkeydown="handleBarcodeKey(event)"
-    style="flex:1;min-width:220px;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;"
-  />
-
-  <button type="button" onclick="autoFillSkuSerial()" style="padding:8px 12px;border-radius:6px;border:1px solid #2563eb;background:#eff6ff;color:#1d4ed8;font-weight:600;cursor:pointer;">
-    Generate SKU &amp; Serial
-  </button>
-</div>
-    <aside class="sidebar">
-        <div>
-            <div class="brand-box">
-                <div class="brand-badge">⚡ IMARA POS</div>
-                <h1 class="brand-name">MUJTABA <span>ELECTRICAL</span></h1>
-                <div class="brand-sub">Suppliers &bull; Cables, Solar, CCTV &amp; Hardware</div>
-            </div>
-
-            <div class="nav-section-label">Workspace Modules</div>
-            <nav class="nav-list" aria-label="Main POS Navigation">
-                <button type="button" data-tab-target="pos" class="nav-btn {% if tab == 'pos' %}active{% endif %}">
-                    <span>🛒 Sales &amp; Cart POS</span>
-                    <span class="nav-tag">POS</span>
-                </button>
-                <button type="button" data-tab-target="inventory" class="nav-btn {% if tab == 'inventory' %}active{% endif %}">
-                    <span>📦 Stock &amp; Cables</span>
-                    <span class="nav-tag">{{ products|length }}</span>
-                </button>
-                <button type="button" data-tab-target="customers" class="nav-btn {% if tab == 'customers' %}active{% endif %}">
-                    <span>💳 Customers &amp; Debts</span>
-                    <span class="nav-tag">{{ customers|length }}</span>
-                </button>
-                <button type="button" data-tab-target="expenses" class="nav-btn {% if tab == 'expenses' %}active{% endif %}">
-                    <span>🧾 Expenses &amp; Net</span>
-                    <span class="nav-tag">EXP</span>
-                </button>
-                <button type="button" data-tab-target="zreport" class="nav-btn {% if tab == 'zreport' %}active{% endif %}">
-                    <span>📊 Daily Z Report</span>
-                    <span class="nav-tag">Z</span>
-                </button>
-            </nav>
-
-            <div class="sidebar-info-card">
-                <strong>⚡ Counter Status</strong>
-                <p>Roll/metre cable cutting, live stock deduction, expenses &amp; dual receipts active.</p>
-            </div>
+<body data-density="comfortable" data-shop-prefix="MJT">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div>
+        <div class="sidebar-brand">
+          <div class="brand-badge">IMARA POS</div>
+          <h1 class="shop-title">{{ shop_name|default:"MUJTABA ELECTRICAL SUPPLIERS" }}</h1>
+          <div class="shop-meta">
+            {{ shop_location|default:"Loitokitok, Kenya" }}<br />
+            Tel: {{ shop_phone|default:"0707 937634" }}<br />
+            Paybill: <span class="mono">{{ paybill_no|default:"522533" }}</span> • Acc: <span class="mono">{{ account_no|default:"8163185" }}</span>
+          </div>
         </div>
 
-        <div class="sidebar-footer">
-            <a class="admin-link" href="/admin/">🛠️ Django Admin Panel &rarr;</a>
-        </div>
+        <nav class="nav-list" aria-label="POS Modules">
+          <button type="button" class="nav-btn {% if active_tab == 'pos' or not active_tab %}is-active{% endif %}" data-tab-target="pos">
+            <span>Sales &amp; Cart POS</span>
+            <span class="nav-pill">POS</span>
+          </button>
+          <button type="button" class="nav-btn {% if active_tab == 'inventory' %}is-active{% endif %}" data-tab-target="inventory">
+            <span>Stock &amp; Cables</span>
+            <span class="nav-pill">{{ products|length|default:0 }}</span>
+          </button>
+          <button type="button" class="nav-btn {% if active_tab == 'customers' %}is-active{% endif %}" data-tab-target="customers">
+            <span>Customers &amp; Credit</span>
+            <span class="nav-pill">{{ customers|length|default:0 }}</span>
+          </button>
+          <button type="button" class="nav-btn {% if active_tab == 'expenses' %}is-active{% endif %}" data-tab-target="expenses">
+            <span>Expenses &amp; Ledger</span>
+            <span class="nav-pill">EXP</span>
+          </button>
+          <button type="button" class="nav-btn" data-tab-target="zreport">
+            <span>Daily Z Report</span>
+            <span class="nav-pill">Z</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-card">
+        <strong>Counter &amp; Roll/Metre Ready</strong>
+        Supports pieces, rolls, and metre cable deductions with live stock updates and receipts.
+      </div>
     </aside>
 
-    <main class="main-panel">
-        <div class="top-strip">
-            <div>
-                <h2 class="page-heading">⚡ IMARA POS Command Center</h2>
-                <span class="page-sub">Mujtaba Electrical Suppliers &bull; POS, Cable Cutting, Credit &amp; Expenses</span>
-            </div>
-
-            <div class="pill-bar">
-                <button type="button" data-tab-target="pos" class="quick-tile tile-blue">🛒 New Sale</button>
-                <button type="button" data-tab-target="inventory" class="quick-tile tile-gold">📦 Restock / Cables</button>
-                <button type="button" data-tab-target="customers" class="quick-tile tile-red">💳 Credit Due</button>
-                <button type="button" data-tab-target="expenses" class="quick-tile tile-green">🧾 Add Expense</button>
-                <button type="button" data-tab-target="zreport" class="quick-tile tile-dark">📊 Daily Z Report</button>
-            </div>
+    <div class="main-column">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">&#9776;</button>
+          <div>
+            <h2 class="page-heading" id="activeTabHeading">Sales &amp; Cart Counter</h2>
+            <div class="page-sub" id="liveClock">{{ now_local|date:"D, d M Y • H:i" }}</div>
+          </div>
         </div>
 
-        {% if error_msg %}<div class="banner-err">⚠️ {{ error_msg }}</div>{% endif %}
-        {% if success_msg %}<div class="banner-ok">⚡ {{ success_msg }}</div>{% endif %}
+        <div class="topbar-actions">
+          <button type="button" class="btn btn-sm" id="toggleDashboardBtn">Hide Dashboard</button>
+          <button type="button" class="btn btn-sm" id="toggleCalcBtn">Calculator</button>
+          <button type="button" class="btn btn-sm btn-primary" id="toggleSettingsBtn">Settings Bar</button>
+        </div>
+      </header>
 
-        <!-- KPI SUMMARY STRIP -->
-        <section class="stats" aria-label="Daily Performance Summary">
-            <div class="stat">
-                <small>💰 Today's Revenue</small>
-                <div class="val">KES {{ daily_revenue }}</div>
-                <div class="stat-foot">🧾 {{ tx_count }} ticket(s) today</div>
+      <section class="settings-bar" id="settingsBar" aria-label="Quick POS Settings">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div>
+              <strong>Dashboard Strip</strong><br />
+              <span class="page-sub">Show or hide top KPI cards</span>
             </div>
+            <button type="button" class="btn btn-sm" id="settingsDashboardToggle">Toggle</button>
+          </div>
+          <div class="setting-item">
+            <div>
+              <strong>Layout Density</strong><br />
+              <span class="page-sub" id="densityLabel">Comfortable</span>
+            </div>
+            <button type="button" class="btn btn-sm" id="settingsDensityToggle">Switch</button>
+          </div>
+          <div class="setting-item">
+            <div>
+              <strong>SKU Code Prefix</strong><br />
+              <span class="page-sub">Used by Generate SKU</span>
+            </div>
+            <input type="text" id="skuPrefixInput" value="MJT" maxlength="8" style="width: 96px; font-family: var(--font-mono);" />
+          </div>
+          <div class="setting-item">
+            <div>
+              <strong>Default Payment</strong><br />
+              <span class="page-sub">Checkout payment mode</span>
+            </div>
+            <select id="defaultPaymentSelect" style="width: 120px;">
+              <option value="CASH" selected>CASH</option>
+              <option value="MPESA">MPESA</option>
+              <option value="PAYBILL">PAYBILL</option>
+              <option value="CREDIT">CREDIT</option>
+            </select>
+          </div>
+        </div>
+      </section>
 
-            <div class="stat green">
-                <small>📈 Gross vs. Net Profit</small>
-                <div class="val">KES {{ daily_net_profit }}</div>
-                <div class="stat-foot">Gross: KES {{ daily_profit }} &bull; Exp: KES {{ daily_expenses }}</div>
-            </div>
+      <main class="content-container">
+        {% if error_msg %}
+          <div class="alert alert-error" role="alert">
+            <span>{{ error_msg }}</span>
+          </div>
+        {% endif %}
 
-            <div class="stat gold">
-                <small>🏆 Best Sellers</small>
-                <div style="font-size: 13px; margin-top: 6px; line-height: 1.45;">
-                    {% for b in best_sellers %}
-                        <div>🔥 {{ b.product__name }} <strong>({{ b.total_sold }} {{ b.unit_sold }})</strong></div>
-                    {% empty %}
-                        <span style="color: var(--muted);">No sales recorded yet</span>
-                    {% endfor %}
-                </div>
-            </div>
+        {% if success_msg %}
+          <div class="alert alert-success" role="status">
+            <span>{{ success_msg }}</span>
+            {% if last_sale %}
+              <a href="{% url 'sale_receipt' last_sale.id %}" target="_blank" class="btn btn-sm btn-success">
+                Print Receipt ({{ last_sale.ticket_no }})
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
 
-            <div class="stat red">
-                <small>🚨 Low Stock / Credit Due</small>
-                <div class="val">{{ low_stock_items|length }} Low &bull; KES {{ total_debt }}</div>
-                <div style="font-size: 12px; color: var(--red); margin-top: 4px;">
-                    {% for item in low_stock_items %}
-                        {{ item.name }} ({{ item.stock_quantity }} {{ item.unit_type }}){% if not forloop.last %}, {% endif %}
-                    {% empty %}
-                        <span style="color: var(--muted);">All stock levels healthy</span>
-                    {% endfor %}
-                </div>
+        <section class="dashboard-section" id="dashboardSection" aria-label="Daily Summary Dashboard">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-label">Today's Revenue</div>
+              <div class="kpi-value">KES {{ daily_revenue|default:"0.00" }}</div>
+              <div class="kpi-sub">{{ tx_count|default:0 }} completed sale(s) today</div>
             </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Cash &amp; M-Pesa Today</div>
+              <div class="kpi-value">KES {{ cash_total|default:"0.00" }}</div>
+              <div class="kpi-sub">M-Pesa / Paybill: KES {{ mpesa_total|default:"0.00" }}</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Expenses Today</div>
+              <div class="kpi-value">KES {{ daily_expenses|default:"0.00" }}</div>
+              <div class="kpi-sub">Est. Daily Profit: KES {{ daily_profit|default:"0.00" }}</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Total Credit Due</div>
+              <div class="kpi-value">KES {{ total_credit_due|default:"0.00" }}</div>
+              <div class="kpi-sub">{{ low_stock_products|length|default:0 }} low-stock item(s)</div>
+            </div>
+          </div>
         </section>
 
-        <!-- TAB 1: MULTI-ITEM CART & SALES POS -->
-        <section id="section-pos" class="{% if tab != 'pos' %}hidden{% endif %}">
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header-row">
-                        <h2>🔌 Select Electrical Items &amp; Cables</h2>
-                        <span style="font-size: 12px; color: var(--muted);">Cables support Per Metre or Full Roll</span>
-                    </div>
-
-                    <input type="text" id="prodSearch" class="search-input" placeholder="🔍 Search by item name or SKU...">
-
-                    <div class="prod-grid" id="prodGrid">
-                        {% for p in products %}
-                        <div class="prod-tile" data-search="{{ p.name|lower }} {{ p.sku|default:''|lower }} {{ p.unit_type|lower }}">
-                            <div>
-                                <strong>{{ p.name }}</strong>
-                                <div class="prod-price">KES {{ p.selling_price }} <span style="font-size:11px;color:#475569;">/ {{ p.unit_type }}</span></div>
-                                <div class="prod-stock">
-                                    📦 Stock: {{ p.stock_quantity }} {{ p.unit_type }}
-                                    {% if p.unit_type == "METRE" or p.unit_type == "ROLL" %}
-                                        <br>📏 Roll = {{ p.metres_per_roll }}m
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            {% if p.unit_type == "METRE" or p.unit_type == "ROLL" %}
-                            <select class="mode-select" aria-label="Sell unit mode for {{ p.name }}">
-                                {% if p.unit_type == "METRE" %}
-                                    <option value="METRE">✂️ Cut by Metre (KES {{ p.selling_price }}/m)</option>
-                                    <option value="ROLL">🌀 Full Roll ({{ p.metres_per_roll }}m)</option>
-                                {% else %}
-                                    <option value="ROLL">🌀 Full Roll (KES {{ p.selling_price }})</option>
-                                    <option value="METRE">✂️ Cut by Metre ({{ p.metres_per_roll }}m/roll)</option>
-                                {% endif %}
-                            </select>
-                            {% endif %}
-
-                            <button
-                                type="button"
-                                class="add-btn"
-                                data-id="{{ p.id }}"
-                                data-name="{{ p.name }}"
-                                data-price="{{ p.selling_price }}"
-                                data-stock="{{ p.stock_quantity }}"
-                                data-unit="{{ p.unit_type }}"
-                                data-mpr="{{ p.metres_per_roll }}"
-                                {% if p.stock_quantity <= 0 %}disabled{% endif %}
-                            >
-                                {% if p.stock_quantity <= 0 %}❌ Out of Stock{% else %}➕ Add to Cart{% endif %}
-                            </button>
-                        </div>
-                        {% empty %}
-                        <p style="color: var(--muted); font-size: 13px;">
-                            No products found. Switch to <strong>Stock &amp; Cables</strong> to add items.
-                        </p>
-                        {% endfor %}
-                    </div>
+        <!-- TAB 1: SALES & CART POS -->
+        <section class="tab-panel {% if active_tab == 'pos' or not active_tab %}is-active{% endif %}" id="tab-pos">
+          <div class="pos-layout">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Product Catalog</h3>
+                <input type="search" id="posSearchInput" placeholder="Search item, SKU, or serial..." style="max-width: 240px;" />
+              </div>
+              <div class="card-body">
+                <div class="form-grid" style="margin-bottom: 12px;">
+                  <div class="form-group">
+                    <label for="posSellMode">Sell Mode</label>
+                    <select id="posSellMode">
+                      <option value="DEFAULT" selected>Standard Unit (PCS / ROLL / METRE)</option>
+                      <option value="ROLL">By Roll</option>
+                      <option value="METRE">By Metre (Cable)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="posAddQty">Quantity to Add</label>
+                    <input type="number" id="posAddQty" value="1" min="0.01" step="0.01" />
+                  </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header-row">
-                        <h2>🛒 Active Cart</h2>
-                        <button type="button" id="clearCartBtn" class="clear-cart-btn">🗑️ Clear Cart</button>
+                <div class="catalog-grid" id="catalogGrid">
+                  {% for p in products %}
+                    <div class="product-tile"
+                         data-id="{{ p.id }}"
+                         data-name="{{ p.name|escape }}"
+                         data-sku="{{ p.sku|default:''|escape }}"
+                         data-serial="{{ p.serial_number|default:''|escape }}"
+                         data-unit="{{ p.unit_type|default:'PCS' }}"
+                         data-mpr="{{ p.metres_per_roll|default:'100' }}"
+                         data-price="{{ p.selling_price|default:'0' }}"
+                         data-stock="{{ p.stock_quantity|default:'0' }}">
+                      <div>
+                        <div class="product-name">{{ p.name }}</div>
+                        <div class="product-sku">SKU: {{ p.sku|default:"—" }} • Stock: {{ p.stock_quantity }} {{ p.unit_type }}</div>
+                      </div>
+                      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                        <span class="product-price">KES {{ p.selling_price }}</span>
+                        <button type="button" class="btn btn-sm btn-primary add-to-cart-btn">+ Add</button>
+                      </div>
                     </div>
-
-                    <div id="cartItems">
-                        <p style="color: var(--muted); font-size: 13px;">Cart is empty.</p>
-                    </div>
-
-                    <div class="cart-total-bar">
-                        <span>Total Due</span>
-                        <span style="color: var(--red);">KES <span id="cartTotal">0.00</span></span>
-                    </div>
-
-                    <form method="POST" id="checkoutForm">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="checkout">
-                        <input type="hidden" name="cart_json" id="cartJsonInput">
-
-                        <label for="payMethod">💵 Payment Method</label>
-                        <select name="payment_method" id="payMethod">
-                            <option value="CASH">💵 Cash</option>
-                            <option value="MPESA">📱 M-Pesa</option>
-                            <option value="CREDIT">💳 Approved Credit</option>
-                            <option value="BANK">🏦 Bank Transfer</option>
-                        </select>
-
-                        <div id="mpesaBox" class="hidden">
-                            <label for="mpesaInput">📱 M-Pesa Transaction Code</label>
-                            <input type="text" id="mpesaInput" name="mpesa_code" placeholder="e.g. QHK7XYZ123" style="text-transform: uppercase;">
-                        </div>
-
-                        <label for="customerSelect">
-                            👤 Customer <span id="custHint" style="color: var(--muted); font-weight: 500;">(Optional)</span>
-                        </label>
-                        <select name="customer_id" id="customerSelect">
-                            <option value="">-- Walk-in Customer --</option>
-                            {% for c in customers %}
-                            <option value="{{ c.id }}">{{ c.name }} (Debt: KES {{ c.credit_balance }})</option>
-                            {% endfor %}
-                        </select>
-
-                        <button type="submit" class="checkout-btn">🧾 Complete Sale &amp; Print Receipt</button>
-                    </form>
+                  {% empty %}
+                    <p class="page-sub">No products yet. Open <strong>Stock &amp; Cables</strong> to add items.</p>
+                  {% endfor %}
                 </div>
-            </div>
-
-            <div class="card" id="recentTicketsCard">
-                <div class="card-header-row">
-                    <h2>🧾 Recent Tickets &amp; Receipts</h2>
-                    <span style="font-size: 12px; color: var(--muted);">Latest 12 transactions</span>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ticket No</th>
-                            <th>Purchased Items</th>
-                            <th>Total Amount</th>
-                            <th>Payment Method</th>
-                            <th>Receipt</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for s in recent_sales %}
-                        <tr>
-                            <td><strong>{{ s.ticket_no }}</strong></td>
-                            <td>
-                                {% for it in s.items.all %}
-                                    {{ it.quantity }} {{ it.unit_sold }} x {{ it.product.name }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td><strong>KES {{ s.total_amount }}</strong></td>
-                            <td>{{ s.payment_method }}{% if s.mpesa_code %} ({{ s.mpesa_code }}){% endif %}</td>
-                            <td>
-                                <a href="{% url 'sale_receipt' s.id %}" target="_blank" style="color: var(--cobalt); font-weight: 800; text-decoration: none;">
-                                    🖨️ Print Receipt
-                                </a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="5" style="color: var(--muted);">No sales recorded yet.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- TAB 2: INVENTORY & CABLE CUTTING -->
-        <section id="section-inventory" class="{% if tab != 'inventory' %}hidden{% endif %}">
-            <div class="grid-2">
-                <div class="card">
-                    <h2>➕ Add New Product / Cable</h2>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="add_product">
-
-                        <label for="prodName">Product Name</label>
-                        <input type="text" id="prodName" name="name" required placeholder="e.g. 2.5mm Twin &amp; Earth Cable">
-
-                        <label for="prodSku">SKU / Item Code</label>
-                        <input type="text" id="prodSku" name="sku" placeholder="e.g. CB-250">
-
-                        <label for="prodUnit">Base Stock Unit</label>
-                        <select id="prodUnit" name="unit_type">
-                            <option value="PCS">Pieces (PCS)</option>
-                            <option value="METRE">Metres (METRE — for cut cable rolls)</option>
-                            <option value="ROLL">Rolls (ROLL)</option>
-                            <option value="BOX">Boxes (BOX)</option>
-                            <option value="PACK">Packets (PACK)</option>
-                        </select>
-
-                        <label for="prodMpr">Metres per Full Roll (for cable cutting)</label>
-                        <input type="number" step="0.01" id="prodMpr" name="metres_per_roll" value="100" min="1" required>
-
-                        <label for="prodBuying">Buying Price per Base Unit (KES)</label>
-                        <input type="number" step="0.01" id="prodBuying" name="buying_price" required placeholder="0.00">
-
-                        <label for="prodSelling">Selling Price per Base Unit (KES)</label>
-                        <input type="number" step="0.01" id="prodSelling" name="selling_price" required placeholder="0.00">
-
-                        <label for="prodStock">Initial Stock Quantity (in Base Unit)</label>
-                        <input type="number" step="0.01" id="prodStock" name="stock_quantity" value="100" min="0" required>
-
-                        <button type="submit" class="primary-btn">💾 Save Product to Inventory</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h2>📥 Quick Restock Existing Item</h2>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="restock">
-
-                        <label for="restockProduct">Select Product</label>
-                        <select id="restockProduct" name="product_id" required>
-                            {% for p in products %}
-                            <option value="{{ p.id }}">{{ p.name }} (Current: {{ p.stock_quantity }} {{ p.unit_type }})</option>
-                            {% endfor %}
-                        </select>
-
-                        <label for="restockQty">Add Quantity (in Base Unit)</label>
-                        <input type="number" step="0.01" id="restockQty" name="add_qty" min="0.01" value="10" required>
-
-                        <button type="submit" class="primary-btn">📦 Update Stock Quantity</button>
-                    </form>
-                </div>
+              </div>
             </div>
 
             <div class="card">
-                <div class="card-header-row">
-                    <h2>📋 Current Stock &amp; Cable Lengths</h2>
-                    <span style="font-size: 12px; color: var(--muted);">Items at or below 5 base units are flagged low</span>
-                </div>
+              <div class="card-header">
+                <h3 class="card-title">Active Cart &amp; Checkout</h3>
+                <button type="button" class="btn btn-sm" id="clearCartBtn">Clear Cart</button>
+              </div>
+              <div class="card-body">
+                <form method="post" id="checkoutForm">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="checkout" />
+                  <input type="hidden" name="cart_json" id="cartJsonInput" value="[]" />
 
-                <table>
-                    <thead>
+                  <div class="table-wrap" style="margin-bottom: 14px;">
+                    <table>
+                      <thead>
                         <tr>
-                            <th>Product Name</th>
-                            <th>SKU</th>
-                            <th>Unit</th>
-                            <th>Roll Size</th>
-                            <th>Buying</th>
-                            <th>Selling</th>
-                            <th>Stock Level</th>
+                          <th>Item</th>
+                          <th>Mode</th>
+                          <th>Qty</th>
+                          <th>Total</th>
+                          <th></th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for p in products %}
+                      </thead>
+                      <tbody id="cartTableBody">
                         <tr>
-                            <td><strong>{{ p.name }}</strong></td>
-                            <td>{{ p.sku|default:"-" }}</td>
-                            <td>{{ p.unit_type }}</td>
-                            <td>{% if p.unit_type == "METRE" or p.unit_type == "ROLL" %}{{ p.metres_per_roll }}m{% else %}-{% endif %}</td>
-                            <td>KES {{ p.buying_price }}</td>
-                            <td>KES {{ p.selling_price }}</td>
-                            <td>
-                                {% if p.stock_quantity <= 5 %}
-                                    <span class="badge-low">⚠️ {{ p.stock_quantity }} {{ p.unit_type }}</span>
-                                {% else %}
-                                    <span class="badge-ok">✅ {{ p.stock_quantity }} {{ p.unit_type }}</span>
-                                {% endif %}
-                            </td>
+                          <td colspan="5" class="page-sub" style="text-align: center;">Cart is empty</td>
                         </tr>
-                        {% empty %}
-                        <tr><td colspan="7" style="color: var(--muted);">No products in inventory yet.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                      </tbody>
+                    </table>
+                  </div>
 
-        <!-- TAB 3: CUSTOMERS & DEBTS -->
-        <section id="section-customers" class="{% if tab != 'customers' %}hidden{% endif %}">
-            <div class="grid-2">
-                <div class="card">
-                    <h2>🙋 Register New Customer / Contractor</h2>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="add_customer">
-
-                        <label for="custName">Customer / Contractor Name</label>
-                        <input type="text" id="custName" name="customer_name" required placeholder="e.g. Mr. Ntiati">
-
-                        <label for="custPhone">Phone Number</label>
-                        <input type="text" id="custPhone" name="phone" placeholder="e.g. 0712345678">
-
-                        <label for="custEmail">Email Address (Optional)</label>
-                        <input type="email" id="custEmail" name="email" placeholder="customer@example.com">
-
-                        <button type="submit" class="primary-btn">➕ Register Customer</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h2>💵 Record Credit Repayment</h2>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="repay_credit">
-
-                        <label for="repayCust">Select Customer</label>
-                        <select id="repayCust" name="customer_id" required>
-                            {% for c in customers %}
-                            <option value="{{ c.id }}">{{ c.name }} (Balance: KES {{ c.credit_balance }})</option>
-                            {% endfor %}
-                        </select>
-
-                        <label for="repayAmount">Amount Paid (KES)</label>
-                        <input type="number" step="0.01" id="repayAmount" name="amount" min="1" required placeholder="0.00">
-
-                        <label for="repayMethod">Payment Channel</label>
-                        <select id="repayMethod" name="method">
-                            <option value="MPESA">📱 M-Pesa</option>
-                            <option value="CASH">💵 Cash</option>
-                        </select>
-
-                        <label for="repayRef">Reference / Notes</label>
-                        <input type="text" id="repayRef" name="reference" placeholder="e.g. M-Pesa code or receipt ref">
-
-                        <button type="submit" class="primary-btn">✅ Record Credit Repayment</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header-row">
-                    <h2>💳 Customer Credit Balances</h2>
-                    <strong style="color: var(--red); font-size: 13px;">Total Outstanding: KES {{ total_debt }}</strong>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr><th>Customer Name</th><th>Phone</th><th>Email</th><th>Outstanding Credit</th></tr>
-                    </thead>
-                    <tbody>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="paymentMethodSelect">Payment Method</label>
+                      <select name="payment_method" id="paymentMethodSelect">
+                        <option value="CASH" selected>CASH</option>
+                        <option value="MPESA">MPESA</option>
+                        <option value="PAYBILL">PAYBILL ({{ paybill_no|default:"522533" }})</option>
+                        <option value="CREDIT">CREDIT</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="mpesaCodeInput">M-Pesa / Ref Code</label>
+                      <input type="text" name="mpesa_code" id="mpesaCodeInput" placeholder="e.g. TKL490XYZ1" />
+                    </div>
+                    <div class="form-group full">
+                      <label for="checkoutCustomerSelect">Customer (Required for Credit)</label>
+                      <select name="customer_id" id="checkoutCustomerSelect">
+                        <option value="">Walk-in Customer</option>
                         {% for c in customers %}
-                        <tr>
-                            <td><strong>{{ c.name }}</strong></td>
-                            <td>{{ c.phone|default:"-" }}</td>
-                            <td>{{ c.email|default:"-" }}</td>
-                            <td>
-                                {% if c.credit_balance > 0 %}
-                                    <span class="badge-low">KES {{ c.credit_balance }}</span>
-                                {% else %}
-                                    <span class="badge-ok">KES {{ c.credit_balance }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="4" style="color: var(--muted);">No customers registered yet.</td></tr>
+                          <option value="{{ c.id }}">{{ c.name }}{% if c.phone %} ({{ c.phone }}){% endif %} — Bal: KES {{ c.credit_balance }}</option>
                         {% endfor %}
-                    </tbody>
-                </table>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-weight: 700;">Grand Total</span>
+                    <span class="mono" id="cartGrandTotal" style="font-size: 20px; font-weight: 800; color: var(--accent);">KES 0.00</span>
+                  </div>
+
+                  <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 12px; padding: 11px;">
+                    Complete Sale &amp; Generate Receipt
+                  </button>
+                </form>
+              </div>
             </div>
+          </div>
         </section>
 
-        <!-- TAB 4: EXPENSES & NET PROFIT -->
-        <section id="section-expenses" class="{% if tab != 'expenses' %}hidden{% endif %}">
-            <div class="grid-2">
-                <div class="card">
-                    <h2>🧾 Record Shop Expense</h2>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="add_expense">
-
-                        <label for="expTitle">Expense Title</label>
-                        <input type="text" id="expTitle" name="title" required placeholder="e.g. Delivery boda to Kimana">
-
-                        <label for="expCat">Category</label>
-                        <select id="expCat" name="category">
-                            <option value="TRANSPORT">🚚 Transport / Boda / Delivery</option>
-                            <option value="UTILITIES">⚡ Electricity / Water / Internet</option>
-                            <option value="STAFF_MEALS">🍵 Staff Meals / Tea</option>
-                            <option value="MAINTENANCE">🔧 Shop Repairs &amp; Maintenance</option>
-                            <option value="SUPPLIES">📦 Packaging / Stationery / Misc</option>
-                            <option value="OTHER">📌 Other Operating Expense</option>
-                        </select>
-
-                        <label for="expAmount">Amount (KES)</label>
-                        <input type="number" step="0.01" id="expAmount" name="amount" min="1" required placeholder="0.00">
-
-                        <label for="expVia">Paid Via</label>
-                        <select id="expVia" name="paid_via">
-                            <option value="CASH">💵 Cash Drawer</option>
-                            <option value="MPESA">📱 M-Pesa</option>
-                        </select>
-
-                        <label for="expNotes">Notes (Optional)</label>
-                        <input type="text" id="expNotes" name="notes" placeholder="Receipt number or short note">
-
-                        <button type="submit" class="primary-btn">💾 Save Expense</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h2>📉 Today's Profit &amp; Expense Summary</h2>
-                    <div class="z-row"><span>📈 Today's Gross Profit</span><strong>KES {{ daily_profit }}</strong></div>
-                    <div class="z-row"><span>🧾 Today's Operating Expenses</span><strong style="color:var(--red);">KES {{ daily_expenses }}</strong></div>
-                    <div class="z-row z-total"><span>💎 Today's Net Profit</span><span style="color:var(--green-dark);">KES {{ daily_net_profit }}</span></div>
-                </div>
+        <!-- TAB 2: STOCK & CABLES -->
+        <section class="tab-panel {% if active_tab == 'inventory' %}is-active{% endif %}" id="tab-inventory">
+          <div class="two-col-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Add New Product / Cable</h3>
+              </div>
+              <div class="card-body">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="add_product" />
+                  <div class="form-grid">
+                    <div class="form-group full">
+                      <label for="prodName">Item Name</label>
+                      <input type="text" name="name" id="prodName" placeholder="e.g. 2.5mm Twin & Earth Cable" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="skuInput">SKU Code</label>
+                      <div class="input-with-btn">
+                        <input type="text" name="sku" id="skuInput" placeholder="Auto or custom SKU" />
+                        <button type="button" class="btn btn-sm btn-primary" id="genSkuBtn">Gen SKU</button>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="serialInput">Serial Number</label>
+                      <div class="input-with-btn">
+                        <input type="text" name="serial_number" id="serialInput" placeholder="Auto or batch serial" />
+                        <button type="button" class="btn btn-sm" id="genSerialBtn">Gen Serial</button>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="unitTypeSelect">Unit Type</label>
+                      <select name="unit_type" id="unitTypeSelect">
+                        <option value="PCS" selected>PCS</option>
+                        <option value="ROLL">ROLL</option>
+                        <option value="METRE">METRE</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="metresPerRollInput">Metres Per Roll</label>
+                      <input type="number" name="metres_per_roll" id="metresPerRollInput" value="100" step="0.01" min="1" />
+                    </div>
+                    <div class="form-group">
+                      <label for="buyingPriceInput">Buying Price (KES)</label>
+                      <input type="number" name="buying_price" id="buyingPriceInput" value="0" step="0.01" min="0" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="sellingPriceInput">Selling Price (KES)</label>
+                      <input type="number" name="selling_price" id="sellingPriceInput" step="0.01" min="0.01" required />
+                    </div>
+                    <div class="form-group full">
+                      <label for="stockQtyInput">Opening Stock Quantity</label>
+                      <input type="number" name="stock_quantity" id="stockQtyInput" value="0" step="0.01" min="0" required />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 14px;">Save Product to Stock</button>
+                </form>
+              </div>
             </div>
 
             <div class="card">
-                <h2>📋 Recent Expenses</h2>
-                <table>
-                    <thead>
-                        <tr><th>Title</th><th>Category</th><th>Paid Via</th><th>Amount</th><th>Notes</th></tr>
-                    </thead>
-                    <tbody>
-                        {% for e in recent_expenses %}
-                        <tr>
-                            <td><strong>{{ e.title }}</strong></td>
-                            <td>{{ e.get_category_display }}</td>
-                            <td>{{ e.paid_via }}</td>
-                            <td class="badge-low">KES {{ e.amount }}</td>
-                            <td>{{ e.notes|default:"-" }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="5" style="color: var(--muted);">No expenses recorded yet.</td></tr>
+              <div class="card-header">
+                <h3 class="card-title">Quick Restock</h3>
+              </div>
+              <div class="card-body">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="restock" />
+                  <div class="form-grid">
+                    <div class="form-group full">
+                      <label for="restockProductSelect">Select Product</label>
+                      <select name="product_id" id="restockProductSelect" required>
+                        {% for p in products %}
+                          <option value="{{ p.id }}">{{ p.name }} (Stock: {{ p.stock_quantity }} {{ p.unit_type }})</option>
                         {% endfor %}
-                    </tbody>
-                </table>
+                      </select>
+                    </div>
+                    <div class="form-group full">
+                      <label for="restockAddQty">Add Quantity</label>
+                      <input type="number" name="add_qty" id="restockAddQty" step="0.01" min="0.01" required />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 14px;">Update Stock</button>
+                </form>
+              </div>
             </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Current Inventory</h3>
+            </div>
+            <div class="card-body table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Serial</th>
+                    <th>Product</th>
+                    <th>Unit</th>
+                    <th>Buying</th>
+                    <th>Selling</th>
+                    <th>Stock</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for p in products %}
+                    <tr>
+                      <td class="mono">{{ p.sku|default:"—" }}</td>
+                      <td class="mono">{{ p.serial_number|default:"—" }}</td>
+                      <td><strong>{{ p.name }}</strong></td>
+                      <td>{{ p.unit_type }}</td>
+                      <td class="mono">KES {{ p.buying_price }}</td>
+                      <td class="mono">KES {{ p.selling_price }}</td>
+                      <td class="mono">{{ p.stock_quantity }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr><td colspan="7" class="page-sub">No products found.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: CUSTOMERS & CREDIT -->
+        <section class="tab-panel {% if active_tab == 'customers' %}is-active{% endif %}" id="tab-customers">
+          <div class="two-col-grid">
+            <div class="card">
+              <div class="card-header"><h3 class="card-title">Add Customer</h3></div>
+              <div class="card-body">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="add_customer" />
+                  <div class="form-grid">
+                    <div class="form-group full">
+                      <label for="custName">Customer Name</label>
+                      <input type="text" name="customer_name" id="custName" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="custPhone">Phone</label>
+                      <input type="text" name="phone" id="custPhone" placeholder="07..." />
+                    </div>
+                    <div class="form-group">
+                      <label for="custEmail">Email (Optional)</label>
+                      <input type="email" name="email" id="custEmail" />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 14px;">Add Customer</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3 class="card-title">Record Credit Repayment</h3></div>
+              <div class="card-body">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="repay_credit" />
+                  <div class="form-grid">
+                    <div class="form-group full">
+                      <label for="repayCustomer">Customer</label>
+                      <select name="customer_id" id="repayCustomer" required>
+                        {% for c in customers %}
+                          <option value="{{ c.id }}">{{ c.name }} — Balance: KES {{ c.credit_balance }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="repayAmount">Amount (KES)</label>
+                      <input type="number" name="amount" id="repayAmount" step="0.01" min="0.01" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="repayMethod">Method</label>
+                      <select name="method" id="repayMethod">
+                        <option value="CASH">CASH</option>
+                        <option value="MPESA">MPESA</option>
+                        <option value="PAYBILL">PAYBILL</option>
+                      </select>
+                    </div>
+                    <div class="form-group full">
+                      <label for="repayRef">Reference / Notes</label>
+                      <input type="text" name="reference" id="repayRef" placeholder="M-Pesa code or note" />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 14px;">Record Repayment</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Customer Credit Balances</h3></div>
+            <div class="card-body table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Credit Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in customers %}
+                    <tr>
+                      <td><strong>{{ c.name }}</strong></td>
+                      <td class="mono">{{ c.phone|default:"—" }}</td>
+                      <td class="mono">KES {{ c.credit_balance }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr><td colspan="3" class="page-sub">No customers recorded yet.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 4: EXPENSES & LEDGER -->
+        <section class="tab-panel {% if active_tab == 'expenses' %}is-active{% endif %}" id="tab-expenses">
+          <div class="two-col-grid">
+            <div class="card">
+              <div class="card-header"><h3 class="card-title">Record Expense</h3></div>
+              <div class="card-body">
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="add_expense" />
+                  <div class="form-grid">
+                    <div class="form-group full">
+                      <label for="expTitle">Expense Title</label>
+                      <input type="text" name="title" id="expTitle" placeholder="e.g. Transport / Shop Supplies" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="expCategory">Category</label>
+                      <select name="category" id="expCategory">
+                        <option value="SUPPLIES">SUPPLIES</option>
+                        <option value="TRANSPORT">TRANSPORT</option>
+                        <option value="UTILITIES">UTILITIES</option>
+                        <option value="OTHER" selected>OTHER</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="expAmount">Amount (KES)</label>
+                      <input type="number" name="amount" id="expAmount" step="0.01" min="0.01" required />
+                    </div>
+                    <div class="form-group full">
+                      <label for="expNotes">Notes</label>
+                      <input type="text" name="notes" id="expNotes" />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 14px;">Save Expense</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3 class="card-title">Recent Expenses</h3></div>
+              <div class="card-body table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for e in recent_expenses %}
+                      <tr>
+                        <td>{{ e.title }}</td>
+                        <td>{{ e.category }}</td>
+                        <td class="mono">KES {{ e.amount }}</td>
+                      </tr>
+                    {% empty %}
+                      <tr><td colspan="3" class="page-sub">No expenses recorded yet.</td></tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- TAB 5: DAILY Z REPORT -->
-        <section id="section-zreport" class="{% if tab != 'zreport' %}hidden{% endif %}">
-            <div class="card z-box">
-                <div class="card-header-row" style="border-bottom: 2px solid var(--cobalt); padding-bottom: 12px;">
-                    <div>
-                        <div style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-dark);">
-                            {{ z_report.system_name }} &bull; Official End-of-Day Z Report
-                        </div>
-                        <h2 style="margin-top: 3px;">{{ z_report.company_name }}</h2>
-                        <div style="font-size: 12.5px; color: var(--muted);">
-                            Report Date: <strong>{{ z_report.date|date:"d/m/Y" }}</strong> &bull;
-                            Time Generated: <strong>{{ z_report.generated_at|date:"d M Y, h:i:s A" }}</strong>
-                        </div>
-                    </div>
-                    <button type="button" id="printZBtn" class="primary-btn no-print" style="margin-top: 0;">
-                        🖨️ Print Daily Z Report
-                    </button>
-                </div>
-
-                <h3 style="font-size: 14px; font-weight: 800; color: var(--cobalt-dark); margin: 16px 0 6px 0;">
-                    📦 Items Sold Today
-                </h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Unit</th>
-                            <th>Qty Sold</th>
-                            <th>Sales Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in z_report.items_sold_today %}
-                        <tr>
-                            <td><strong>{{ item.product__name }}</strong></td>
-                            <td>{{ item.unit_sold }}</td>
-                            <td><strong>{{ item.total_qty }}</strong></td>
-                            <td>KES {{ item.total_revenue }}</td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="4" style="color: var(--muted);">No items sold today.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-                <h3 style="font-size: 14px; font-weight: 800; color: var(--cobalt-dark); margin: 18px 0 6px 0;">
-                    💰 Cash, Credit, Expenses &amp; Profit Settlement
-                </h3>
-
-                <div class="z-row"><span>🧾 Total Sales Tickets Issued</span><strong>{{ z_report.ticket_count }}</strong></div>
-                <div class="z-row"><span>💵 Cash Sales Total</span><strong>KES {{ z_report.cash_total }}</strong></div>
-                <div class="z-row"><span>📱 M-Pesa Sales Total</span><strong>KES {{ z_report.mpesa_total }}</strong></div>
-                <div class="z-row"><span>💳 Approved Credit Sales Total</span><strong>KES {{ z_report.credit_total }}</strong></div>
-                <div class="z-row"><span>🏦 Bank Transfer Sales Total</span><strong>KES {{ z_report.bank_total }}</strong></div>
-                <div class="z-row"><span>📥 Credit Repayments Collected Today</span><strong>KES {{ z_report.repayments_today }}</strong></div>
-                <div class="z-row"><span>📉 Operating Expenses Today</span><strong style="color: var(--red);">KES {{ z_report.expenses_today }}</strong></div>
-                <div class="z-row"><span>📈 Today's Gross Profit</span><strong>KES {{ z_report.gross_profit }}</strong></div>
-                <div class="z-row"><span>💎 Today's Net Profit (After Expenses)</span><strong style="color: var(--green-dark);">KES {{ z_report.net_profit }}</strong></div>
-                <div class="z-row"><span>💰 Total Gross Sales</span><strong>KES {{ z_report.gross_sales }}</strong></div>
-                <div class="z-row z-total"><span>⚡ Net Cash + M-Pesa After Expenses</span><span style="color: var(--red);">KES {{ z_report.net_cash_and_mpesa }}</span></div>
+        <section class="tab-panel" id="tab-zreport">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Daily Z Report &amp; Recent Sales</h3>
+              <button type="button" class="btn btn-sm" onclick="window.print()">Print Report</button>
             </div>
+            <div class="card-body table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ticket</th>
+                    <th>Customer</th>
+                    <th>Payment</th>
+                    <th>Total</th>
+                    <th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for s in recent_sales %}
+                    <tr>
+                      <td class="mono">{{ s.ticket_no }}</td>
+                      <td>{{ s.customer.name|default:"Walk-in" }}</td>
+                      <td>{{ s.payment_method }}</td>
+                      <td class="mono">KES {{ s.total_amount }}</td>
+                      <td><a href="{% url 'sale_receipt' s.id %}" target="_blank" class="btn btn-sm">View</a></td>
+                    </tr>
+                  {% empty %}
+                    <tr><td colspan="5" class="page-sub">No sales recorded yet.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </section>
-    </main>
+      </main>
 
-    <script>
-        (function () {
-            "use strict";
-            var cart = [];
+      <footer class="app-footer">
+        <div>
+          <strong>{{ brand_footer|default:"Powered by IMARA POS • Imara Systems Tech" }}</strong> —
+          {{ brand_tagline|default:"POS Systems • Web Apps • Business Automation • Call/WhatsApp: 0790 576 915" }}
+        </div>
+        <div class="mono">{{ shop_name|default:"MUJTABA ELECTRICAL SUPPLIERS" }} • {{ shop_phone|default:"0707 937634" }}</div>
+      </footer>
+    </div>
+  </div>
 
-            function switchTab(tabName) {
-                var tabs = ["pos", "inventory", "customers", "expenses", "zreport"];
-                if (tabs.indexOf(tabName) === -1) tabName = "pos";
+  <!-- Calculator Widget -->
+  <div class="calc-modal" id="calcModal" role="dialog" aria-label="Counter Calculator">
+    <div class="calc-header">
+      <span>Counter Calculator</span>
+      <button type="button" class="btn btn-sm" id="closeCalcBtn">Close</button>
+    </div>
+    <div class="calc-screen">
+      <div class="calc-expr" id="calcExpr"></div>
+      <div class="calc-display" id="calcDisplay">0</div>
+    </div>
+    <div class="calc-keys" id="calcKeys">
+      <button type="button" class="calc-key op" data-key="C">C</button>
+      <button type="button" class="calc-key op" data-key="DEL">DEL</button>
+      <button type="button" class="calc-key op" data-key="/">/</button>
+      <button type="button" class="calc-key op" data-key="*">*</button>
+      <button type="button" class="calc-key" data-key="7">7</button>
+      <button type="button" class="calc-key" data-key="8">8</button>
+      <button type="button" class="calc-key" data-key="9">9</button>
+      <button type="button" class="calc-key op" data-key="-">-</button>
+      <button type="button" class="calc-key" data-key="4">4</button>
+      <button type="button" class="calc-key" data-key="5">5</button>
+      <button type="button" class="calc-key" data-key="6">6</button>
+      <button type="button" class="calc-key op" data-key="+">+</button>
+      <button type="button" class="calc-key" data-key="1">1</button>
+      <button type="button" class="calc-key" data-key="2">2</button>
+      <button type="button" class="calc-key" data-key="3">3</button>
+      <button type="button" class="calc-key eq" data-key="=">=</button>
+      <button type="button" class="calc-key" data-key="0" style="grid-column: span 2;">0</button>
+      <button type="button" class="calc-key" data-key=".">.</button>
+      <button type="button" class="calc-key op" data-key="USE">Use Qty</button>
+    </div>
+  </div>
 
-                tabs.forEach(function (t) {
-                    var sec = document.getElementById("section-" + t);
-                    if (sec) {
-                        if (t === tabName) sec.classList.remove("hidden");
-                        else sec.classList.add("hidden");
-                    }
-                });
-
-                document.querySelectorAll(".nav-btn[data-tab-target]").forEach(function (btn) {
-                    if (btn.getAttribute("data-tab-target") === tabName) btn.classList.add("active");
-                    else btn.classList.remove("active");
-                });
-            }
-
-            function calcLineUnitPrice(basePrice, baseUnit, sellMode, mpr) {
-                var rollSize = mpr > 0 ? mpr : 100;
-                if (sellMode === "ROLL") {
-                    return baseUnit === "ROLL" ? basePrice : basePrice * rollSize;
-                }
-                if (sellMode === "METRE") {
-                    return baseUnit === "METRE" ? basePrice : basePrice / rollSize;
-                }
-                return basePrice;
-            }
-
-            function calcBaseDeduction(qty, baseUnit, sellMode, mpr) {
-                var rollSize = mpr > 0 ? mpr : 100;
-                if (sellMode === "ROLL") {
-                    return baseUnit === "ROLL" ? qty : qty * rollSize;
-                }
-                if (sellMode === "METRE") {
-                    return qty;
-                }
-                return qty;
-            }
-
-            function addToCart(item) {
-                var deductOne = calcBaseDeduction(1, item.baseUnit, item.sellMode, item.mpr);
-                if (item.maxStock < deductOne) {
-                    window.alert("Not enough stock for " + item.name + " in " + item.sellMode + " mode.");
-                    return;
-                }
-
-                var key = item.id + "_" + item.sellMode;
-                var existing = null;
-                for (var i = 0; i < cart.length; i += 1) {
-                    if (cart[i].key === key) {
-                        existing = cart[i];
-                        break;
-                    }
-                }
-
-                if (existing) {
-                    var nextDeduct = calcBaseDeduction(existing.qty + 1, existing.baseUnit, existing.sellMode, existing.mpr);
-                    if (nextDeduct > existing.maxStock) {
-                        window.alert("Reached available stock limit for " + existing.name + ".");
-                        return;
-                    }
-                    existing.qty += 1;
-                } else {
-                    cart.push({
-                        key: key,
-                        id: item.id,
-                        name: item.name,
-                        sellMode: item.sellMode,
-                        unitLabel: item.sellMode === "BASE" ? item.baseUnit : item.sellMode,
-                        baseUnit: item.baseUnit,
-                        mpr: item.mpr,
-                        price: item.unitPrice,
-                        qty: 1,
-                        maxStock: item.maxStock
-                    });
-                }
-                renderCart();
-            }
-
-            function changeQty(key, delta) {
-                var next = [];
-                for (var i = 0; i < cart.length; i += 1) {
-                    var it = cart[i];
-                    if (it.key === key) {
-                        var nq = it.qty + delta;
-                        if (nq > 0) {
-                            var reqBase = calcBaseDeduction(nq, it.baseUnit, it.sellMode, it.mpr);
-                            if (reqBase > it.maxStock) {
-                                window.alert("Insufficient stock for " + nq + " " + it.unitLabel + ".");
-                                next.push(it);
-                            } else {
-                                it.qty = nq;
-                                next.push(it);
-                            }
-                        }
-                    } else {
-                        next.push(it);
-                    }
-                }
-                cart = next;
-                renderCart();
-            }
-
-            function renderCart() {
-                var box = document.getElementById("cartItems");
-                var totalEl = document.getElementById("cartTotal");
-                if (!box || !totalEl) return;
-
-                if (cart.length === 0) {
-                    box.innerHTML = '<p style="color: var(--muted); font-size: 13px;">Cart is empty.</p>';
-                    totalEl.textContent = "0.00";
-                    return;
-                }
-
-                box.innerHTML = "";
-                var total = 0;
-
-                for (var i = 0; i < cart.length; i += 1) {
-                    var it = cart[i];
-                    var sub = it.price * it.qty;
-                    total += sub;
-
-                    var row = document.createElement("div");
-                    row.className = "cart-row";
-
-                    var info = document.createElement("div");
-                    var title = document.createElement("strong");
-                    title.textContent = it.name + " (" + it.unitLabel + ")";
-                    var subTxt = document.createElement("div");
-                    subTxt.style.color = "var(--muted)";
-                    subTxt.style.fontSize = "12px";
-                    subTxt.textContent = "KES " + it.price.toFixed(2) + " / " + it.unitLabel;
-                    info.appendChild(title);
-                    info.appendChild(subTxt);
-
-                    var ctrls = document.createElement("div");
-                    ctrls.className = "qty-controls";
-
-                    var minus = document.createElement("button");
-                    minus.type = "button";
-                    minus.className = "qty-btn";
-                    minus.textContent = "-";
-                    minus.setAttribute("data-cart-key", it.key);
-                    minus.setAttribute("data-delta", "-1");
-
-                    var qSpan = document.createElement("span");
-                    qSpan.style.fontWeight = "800";
-                    qSpan.style.minWidth = "22px";
-                    qSpan.style.textAlign = "center";
-                    qSpan.textContent = String(it.qty);
-
-                    var plus = document.createElement("button");
-                    plus.type = "button";
-                    plus.className = "qty-btn";
-                    plus.textContent = "+";
-                    plus.setAttribute("data-cart-key", it.key);
-                    plus.setAttribute("data-delta", "1");
-
-                    var lineEl = document.createElement("strong");
-                    lineEl.style.marginLeft = "8px";
-                    lineEl.textContent = "KES " + sub.toFixed(2);
-
-                    ctrls.appendChild(minus);
-                    ctrls.appendChild(qSpan);
-                    ctrls.appendChild(plus);
-                    ctrls.appendChild(lineEl);
-
-                    row.appendChild(info);
-                    row.appendChild(ctrls);
-                    box.appendChild(row);
-                }
-
-                totalEl.textContent = total.toFixed(2);
-            }
-
-            document.addEventListener("click", function (e) {
-                var t = e.target;
-                if (!t) return;
-
-                var tabBtn = t.closest("[data-tab-target]");
-                if (tabBtn) {
-                    switchTab(tabBtn.getAttribute("data-tab-target"));
-                    return;
-                }
-
-                var addBtn = t.closest(".add-btn");
-                if (addBtn && !addBtn.disabled) {
-                    var tile = addBtn.closest(".prod-tile");
-                    var modeSel = tile ? tile.querySelector(".mode-select") : null;
-                    var baseUnit = addBtn.getAttribute("data-unit") || "PCS";
-                    var sellMode = modeSel ? modeSel.value : "BASE";
-                    var basePrice = parseFloat(addBtn.getAttribute("data-price")) || 0;
-                    var mpr = parseFloat(addBtn.getAttribute("data-mpr")) || 100;
-                    var unitPrice = calcLineUnitPrice(basePrice, baseUnit, sellMode, mpr);
-
-                    addToCart({
-                        id: parseInt(addBtn.getAttribute("data-id"), 10),
-                        name: addBtn.getAttribute("data-name") || "",
-                        baseUnit: baseUnit,
-                        sellMode: sellMode,
-                        mpr: mpr,
-                        unitPrice: unitPrice,
-                        maxStock: parseFloat(addBtn.getAttribute("data-stock")) || 0
-                    });
-                    return;
-                }
-
-                var qtyBtn = t.closest(".qty-btn");
-                if (qtyBtn) {
-                    changeQty(qtyBtn.getAttribute("data-cart-key"), parseInt(qtyBtn.getAttribute("data-delta"), 10));
-                    return;
-                }
-
-                if (t.id === "clearCartBtn") {
-                    cart = [];
-                    renderCart();
-                } else if (t.id === "printZBtn") {
-                    window.print();
-                }
-            });
-
-            document.addEventListener("input", function (e) {
-                if (e.target && e.target.id === "prodSearch") {
-                    var q = e.target.value.toLowerCase().trim();
-                    document.querySelectorAll(".prod-tile").forEach(function (tile) {
-                        var hay = (tile.getAttribute("data-search") || "").toLowerCase();
-                        tile.style.display = (q === "" || hay.indexOf(q) !== -1) ? "flex" : "none";
-                    });
-                }
-            });
-
-            document.addEventListener("change", function (e) {
-                if (e.target && e.target.id === "payMethod") {
-                    var m = e.target.value;
-                    var mpesaBox = document.getElementById("mpesaBox");
-                    var hint = document.getElementById("custHint");
-                    if (mpesaBox) {
-                        if (m === "MPESA") mpesaBox.classList.remove("hidden");
-                        else mpesaBox.classList.add("hidden");
-                    }
-                    if (hint) {
-                        hint.textContent = (m === "CREDIT") ? "(Required for Credit)" : "(Optional)";
-                        hint.style.color = (m === "CREDIT") ? "#dc2626" : "#64748b";
-                    }
-                }
-            });
-
-            document.addEventListener("submit", function (e) {
-                if (e.target && e.target.id === "checkoutForm") {
-                    if (cart.length === 0) {
-                        e.preventDefault();
-                        window.alert("Add at least one item to the cart first.");
-                        return;
-                    }
-                    var inp = document.getElementById("cartJsonInput");
-                    if (inp) inp.value = JSON.stringify(cart);
-                }
-            });
-        })();
-    </script>
-    {% if completed_sale_id %}
   <script>
-    setTimeout(function () {
-      window.location.href = "/receipt/{{ completed_sale_id }}/";
-    }, 800);
-  </script>
-{% endif %}
-<script>
-  let currentScanMode = "sell";
+    (function () {
+      const tabTitles = {
+        pos: "Sales & Cart Counter",
+        inventory: "Stock & Cables Inventory",
+        customers: "Customers & Credit Ledger",
+        expenses: "Expenses & Daily Ledger",
+        zreport: "Daily Z Report & Sales"
+      };
 
-  function updateClock() {
-    const now = new Date();
-    const dateEl = document.getElementById("liveDate");
-    const clockEl = document.getElementById("liveClock");
-    if (dateEl) {
-      dateEl.textContent = now.toLocaleDateString("en-GB", {
-        weekday: "short",
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
+      const sidebar = document.getElementById("sidebar");
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const navButtons = document.querySelectorAll("[data-tab-target]");
+      const tabPanels = document.querySelectorAll(".tab-panel");
+      const activeTabHeading = document.getElementById("activeTabHeading");
+
+      function switchTab(tabName) {
+        if (!tabTitles[tabName]) tabName = "pos";
+        navButtons.forEach((btn) => {
+          btn.classList.toggle("is-active", btn.dataset.tabTarget === tabName);
+        });
+        tabPanels.forEach((panel) => {
+          panel.classList.toggle("is-active", panel.id === "tab-" + tabName);
+        });
+        if (activeTabHeading) activeTabHeading.textContent = tabTitles[tabName];
+        if (sidebar) sidebar.classList.remove("is-open");
+      }
+
+      navButtons.forEach((btn) => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tabTarget));
       });
-    }
-    if (clockEl) {
-      clockEl.textContent = now.toLocaleTimeString("en-GB", { hour12: false });
-    }
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
 
-  function toggleSettingsPanel(isOpen) {
-    const panel = document.getElementById("settingsPanel");
-    if (panel) panel.style.display = isOpen ? "block" : "none";
-  }
+      if (mobileMenuBtn && sidebar) {
+        mobileMenuBtn.addEventListener("click", () => sidebar.classList.toggle("is-open"));
+      }
 
-  function toggleCalcModal() {
-    const modal = document.getElementById("calcModal");
-    if (!modal) return;
-    modal.style.display = modal.style.display === "flex" ? "none" : "flex";
-  }
+      // Dashboard visibility & Settings bar
+      const dashboardSection = document.getElementById("dashboardSection");
+      const toggleDashboardBtn = document.getElementById("toggleDashboardBtn");
+      const settingsDashboardToggle = document.getElementById("settingsDashboardToggle");
+      const toggleSettingsBtn = document.getElementById("toggleSettingsBtn");
+      const settingsBar = document.getElementById("settingsBar");
+      const settingsDensityToggle = document.getElementById("settingsDensityToggle");
+      const densityLabel = document.getElementById("densityLabel");
+      const defaultPaymentSelect = document.getElementById("defaultPaymentSelect");
+      const paymentMethodSelect = document.getElementById("paymentMethodSelect");
 
-  function setScanMode(mode) {
-    currentScanMode = mode;
-    const sellBtn = document.getElementById("modeSellBtn");
-    const stockBtn = document.getElementById("modeStockBtn");
-    const input = document.getElementById("barcodeScanInput");
+      function toggleDashboard() {
+        if (!dashboardSection) return;
+        const hidden = dashboardSection.classList.toggle("is-hidden");
+        if (toggleDashboardBtn) {
+          toggleDashboardBtn.textContent = hidden ? "Show Dashboard" : "Hide Dashboard";
+        }
+      }
 
-    if (mode === "sell") {
-      sellBtn.style.background = "#059669";
-      stockBtn.style.background = "#4b5563";
-      input.placeholder = "Scan item to ADD TO CART (Sell) & press Enter...";
-    } else {
-      stockBtn.style.background = "#2563eb";
-      sellBtn.style.background = "#4b5563";
-      input.placeholder = "Scan item to RESTOCK (+1 / Qty) & press Enter...";
-    }
-    input.focus();
-  }
+      if (toggleDashboardBtn) toggleDashboardBtn.addEventListener("click", toggleDashboard);
+      if (settingsDashboardToggle) settingsDashboardToggle.addEventListener("click", toggleDashboard);
 
-  function handleBarcodeKey(event) {
-    if (event.key !== "Enter") return;
-    event.preventDefault();
-    const code = event.target.value.trim();
-    if (!code) return;
+      if (toggleSettingsBtn && settingsBar) {
+        toggleSettingsBtn.addEventListener("click", () => settingsBar.classList.toggle("is-open"));
+      }
 
-    console.log("Scanned:", code, "Mode:", currentScanMode);
-    event.target.value = "";
-  }
+      if (settingsDensityToggle) {
+        settingsDensityToggle.addEventListener("click", () => {
+          const isCompact = document.body.dataset.density === "compact";
+          document.body.dataset.density = isCompact ? "comfortable" : "compact";
+          if (densityLabel) densityLabel.textContent = isCompact ? "Comfortable" : "Compact";
+        });
+      }
 
-  function autoFillSkuSerial() {
-    const nameInput = document.querySelector('input[name="name"], #id_name');
-    const skuInput = document.querySelector('input[name="sku"], #id_sku');
-    const serialInput = document.querySelector('input[name="serial_number"], #id_serial_number');
+      if (defaultPaymentSelect && paymentMethodSelect) {
+        defaultPaymentSelect.addEventListener("change", () => {
+          paymentMethodSelect.value = defaultPaymentSelect.value;
+        });
+      }
 
-    const base = (nameInput && nameInput.value ? nameInput.value : "ITEM")
-      .replace(/[^a-zA-Z]/g, "")
-      .toUpperCase()
-      .slice(0, 3)
-      .padEnd(3, "X");
+      // SKU & Serial Generator
+      const skuInput = document.getElementById("skuInput");
+      const serialInput = document.getElementById("serialInput");
+      const skuPrefixInput = document.getElementById("skuPrefixInput");
+      const genSkuBtn = document.getElementById("genSkuBtn");
+      const genSerialBtn = document.getElementById("genSerialBtn");
 
-    const now = new Date();
-    const ymd = [
-      String(now.getFullYear()).slice(-2),
-      String(now.getMonth() + 1).padStart(2, "0"),
-      String(now.getDate()).padStart(2, "0"),
-    ].join("");
+      function randomCode(len) {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        let out = "";
+        for (let i = 0; i < len; i += 1) {
+          out += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return out;
+      }
 
-    const skuCode = `MES-${base}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const snCode = `SN-${ymd}-${Math.floor(100000 + Math.random() * 900000)}`;
+      if (genSkuBtn && skuInput) {
+        genSkuBtn.addEventListener("click", () => {
+          const prefix = ((skuPrefixInput && skuPrefixInput.value) || "MJT")
+            .trim()
+            .toUpperCase()
+            .replace(/[^A-Z0-9]/g, "") || "MJT";
+          skuInput.value = `${prefix}-${Date.now().toString().slice(-5)}-${randomCode(3)}`;
+        });
+      }
 
-    if (skuInput) skuInput.value = skuCode;
-    if (serialInput) serialInput.value = snCode;
-  }
-</script>
-</body>
+      if (genSerialBtn && serialInput) {
+        genSerialBtn.addEventListener("click", () => {
+          serialInput.value = `SN-${new Date().getFullYear()}${randomCode(6)}`;
+        });
+      }
+
+      // Catalog Search & Cart
+      const posSearchInput = document.getElementById("posSearchInput");
+      const productTiles = document.querySelectorAll(".product-tile");
+      const posSellMode = document.getElementById("posSellMode");
+      const posAddQty = document.getElementById("posAddQty");
+      const cartTableBody = document.getElementById("cartTableBody");
+      const cartGrandTotal = document.getElementById("cartGrandTotal");
+      const cartJsonInput = document.getElementById("cartJsonInput");
+      const clearCartBtn = document.getElementById("clearCartBtn");
+      const checkoutForm = document.getElementById("checkoutForm");
+
+      let cart = [];
+
+      if (posSearchInput) {
+        posSearchInput.addEventListener("input", () => {
+          const q = posSearchInput.value.trim().toLowerCase();
+          productTiles.forEach((tile) => {
+            const hay = `${tile.dataset.name || ""} ${tile.dataset.sku || ""} ${tile.dataset.serial || ""}`.toLowerCase();
+            tile.style.display = !q || hay.includes(q) ? "" : "none";
+          });
+        });
+      }
+
+      function computeLinePrice(tile, mode) {
+        const basePrice = parseFloat(tile.dataset.price || "0") || 0;
+        const unitType = (tile.dataset.unit || "PCS").toUpperCase();
+        const mpr = parseFloat(tile.dataset.mpr || "100") || 100;
+        if (mode === "ROLL") {
+          return unitType === "ROLL" ? basePrice : basePrice * mpr;
+        }
+        if (mode === "METRE") {
+          return unitType === "ROLL" ? basePrice / mpr : basePrice;
+        }
+        return basePrice;
+      }
+
+      function renderCart() {
+        if (!cartTableBody || !cartGrandTotal || !cartJsonInput) return;
+        cartJsonInput.value = JSON.stringify(cart);
+
+        if (!cart.length) {
+          cartTableBody.innerHTML = '<tr><td colspan="5" class="page-sub" style="text-align:center;">Cart is empty</td></tr>';
+          cartGrandTotal.textContent = "KES 0.00";
+          return;
+        }
+
+        let grand = 0;
+        cartTableBody.innerHTML = cart.map((item, idx) => {
+          const lineTotal = item.qty * item.unit_price;
+          grand += lineTotal;
+          return `
+            <tr>
+              <td><strong>${item.name}</strong><div class="product-sku mono">@ KES ${item.unit_price.toFixed(2)}</div></td>
+              <td class="mono">${item.sell_mode}</td>
+              <td class="mono">${item.qty}</td>
+              <td class="mono">KES ${lineTotal.toFixed(2)}</td>
+              <td><button type="button" class="btn btn-sm remove-cart-btn" data-index="${idx}">x</button></td>
+            </tr>
+          `;
+        }).join("");
+
+        cartGrandTotal.textContent = `KES ${grand.toFixed(2)}`;
+        cartTableBody.querySelectorAll(".remove-cart-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            cart.splice(Number(btn.dataset.index), 1);
+            renderCart();
+          });
+        });
+      }
+
+      document.querySelectorAll(".add-to-cart-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tile = btn.closest(".product-tile");
+          if (!tile) return;
+          const qty = Math.max(0.01, parseFloat((posAddQty && posAddQty.value) || "1") || 1);
+          const mode = (posSellMode && posSellMode.value) || "DEFAULT";
+          const unitPrice = computeLinePrice(tile, mode);
+          const id = tile.dataset.id;
+          const existing = cart.find((c) => c.id === id && c.sell_mode === mode);
+          if (existing) {
+            existing.qty = Number((existing.qty + qty).toFixed(2));
+          } else {
+            cart.push({
+              id: id,
+              name: tile.dataset.name || "Item",
+              qty: qty,
+              sell_mode: mode,
+              unit_price: unitPrice
+            });
+          }
+          renderCart();
+        });
+      });
+
+      if (clearCartBtn) {
+        clearCartBtn.addEventListener("click", () => {
+          cart = [];
+          renderCart();
+        });
+      }
+
+      if (checkoutForm) {
+        checkoutForm.addEventListener("submit", (e) => {
+          if (!cart.length) {
+            e.preventDefault();
+            alert("Add at least one item to the cart before checking out.");
+          }
+        });
+      }
+
+      // Counter Calculator
+      const calcModal = document.getElementById("calcModal");
+      const toggleCalcBtn = document.getElementById("toggleCalcBtn");
+      const closeCalcBtn = document.getElementById("closeCalcBtn");
+      const calcDisplay = document.getElementById("calcDisplay");
+      const calcExpr = document.getElementById("calcExpr");
+      const calcKeys = document.getElementById("calcKeys");
+      let expr = "";
+
+      if (toggleCalcBtn && calcModal) {
+        toggleCalcBtn.addEventListener("click", () => calcModal.classList.toggle("is-open"));
+      }
+      if (closeCalcBtn && calcModal) {
+        closeCalcBtn.addEventListener("click", () => calcModal.classList.remove("is-open"));
+      }
+
+      function evaluateExpr(raw) {
+        const clean = raw.replace(/[^0-9+\-*/.]/g, "");
+        if (!clean) return "0";
+        const result = Function(`"use strict"; return (${clean});`)();
+        return Number.isFinite(result) ? String(Number(result.toFixed(4))) : "Error";
+      }
+
+      if (calcKeys && calcDisplay && calcExpr) {
+        calcKeys.addEventListener("click", (e) => {
+          const key = e.target.dataset.key;
+          if (!key) return;
+          if (key === "C") {
+            expr = "";
+            calcExpr.textContent = "";
+            calcDisplay.textContent = "0";
+          } else if (key === "DEL") {
+            expr = expr.slice(0, -1);
+            calcDisplay.textContent = expr || "0";
+          } else if (key === "=") {
+            try {
+              const out = evaluateExpr(expr);
+              calcExpr.textContent = expr + " =";
+              calcDisplay.textContent = out;
+              expr = out === "Error" ? "" : out;
+            } catch (_) {
+              calcDisplay.textContent = "Error";
+              expr = "";
+            }
+          } else if (key === "USE") {
+            const val = parseFloat(calcDisplay.textContent);
+            if (Number.isFinite(val) && val > 0 && posAddQty) {
+              posAddQty.value = String(val);
+            }
+          } else {
+            expr += key;
+            calcDisplay.textContent = expr;
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
